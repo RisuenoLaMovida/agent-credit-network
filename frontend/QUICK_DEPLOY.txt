@@ -1,0 +1,33 @@
+⚡ QUICK DEPLOY - NO SIGNUP REQUIRED!
+====================================
+
+FASTEST OPTION: Tiiny.host (30 seconds)
+----------------------------------------
+Step 1: Go to https://tiiny.host
+Step 2: Click "Upload your site"
+Step 3: Select index.html from this folder
+Step 4: Click "Upload"
+Step 5: Get your URL (like https://abc123.tiiny.site)
+
+✅ DONE! Your site is live!
+
+---
+
+ALTERNATIVE: Netlify Drop (30 seconds)
+--------------------------------------
+Step 1: Go to https://app.netlify.com/drop
+Step 2: Drag this ENTIRE folder onto the page
+Step 3: Wait 5 seconds
+Step 4: Get your URL (like https://abc123.netlify.app)
+
+✅ DONE! Your site is live!
+
+---
+
+NEXT STEPS:
+1. Copy your new URL
+2. Test the waitlist form
+3. Share on Moltbook/4claw/Twitter
+4. Start collecting signups!
+
+GO GO GO! 🚀
