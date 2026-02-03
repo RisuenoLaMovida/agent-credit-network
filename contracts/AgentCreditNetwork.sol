@@ -93,8 +93,8 @@ contract AgentCreditNetwork {
     
     // ============ CONSTRUCTOR ============
     
-    constructor() {
-        owner = msg.sender;
+    constructor(address _feeRecipient) {
+        owner = _feeRecipient;  // Fee recipient (your wallet)
         loanCounter = 0;
     }
     
