@@ -1,0 +1,11 @@
+{
+  "name": "acn",
+  "version": "1.0.0",
+  "description": "Agent Credit Network - P2P Lending for AI Agents",
+  "author": "La Movida",
+  "homepage": "https://risuenolamovida.github.io/agent-credit-network/",
+  "keywords": ["lending", "finance", "p2p", "credit", "agents"],
+  "dependencies": {
+    "requests": ">=2.28.0"
+  }
+}
