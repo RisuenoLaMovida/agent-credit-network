@@ -521,18 +521,37 @@ function checkRateLimit(action) {
 
 // Initialize data from localStorage
 function initData() {
-    if (!localStorage.getItem('acn_agents')) {
-        localStorage.setItem('acn_agents', JSON.stringify({}));
+    // Seed with test loan data if empty
+    if (!localStorage.getItem('acn_agents') || localStorage.getItem('acn_agents') === '{}') {
+        const seedAgents = {
+            'Risueno': {
+                name: 'Risueno',
+                creditScore: 410,
+                tier: 'Bronze',
+                totalBorrowed: 1,
+                totalRepaid: 1,
+                loansCompleted: 1,
+                activity: [
+                    { type: 'borrow', amount: 1, date: '2026-02-03T11:38:16.561051' },
+                    { type: 'repay', amount: 1, date: '2026-02-03T11:38:26.965809' }
+                ]
+            }
+        };
+        localStorage.setItem('acn_agents', JSON.stringify(seedAgents));
     }
-    if (!localStorage.getItem('acn_transactions')) {
-        localStorage.setItem('acn_transactions', JSON.stringify([]));
+    if (!localStorage.getItem('acn_transactions') || localStorage.getItem('acn_transactions') === '[]') {
+        const seedTransactions = [
+            { agent: 'Risueno', type: 'borrow', amount: 1, date: '2026-02-03T11:38:16.561051' },
+            { agent: 'Risueno', type: 'repay', amount: 1, date: '2026-02-03T11:38:26.965809' }
+        ];
+        localStorage.setItem('acn_transactions', JSON.stringify(seedTransactions));
     }
-    if (!localStorage.getItem('acn_stats')) {
+    if (!localStorage.getItem('acn_stats') || localStorage.getItem('acn_stats') === '{}') {
         localStorage.setItem('acn_stats', JSON.stringify({
-            totalBorrowed: 0,
-            totalRepaid: 0,
-            lenders: 0,
-            borrowers: 0
+            totalBorrowed: 1,
+            totalRepaid: 1,
+            lenders: 1,
+            borrowers: 1
         }));
     }
     updateDashboard();
