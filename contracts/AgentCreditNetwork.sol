@@ -111,7 +111,7 @@ contract AgentCreditNetwork {
         uint256 _duration,
         string memory _purpose
     ) external onlyVerified returns (uint256) {
-        require(_amount >= 100 * 10**6, "Min loan $100"); // USDC 6 decimals
+        require(_amount >= 1 * 10**6, "Min loan $1"); // USDC 6 decimals - allowing $1 for testing
         require(_amount <= 10000 * 10**6, "Max loan $10K");
         require(_interestRate >= 500 && _interestRate <= 2500, "Rate 5-25%");
         require(_duration >= 7 && _duration <= 180, "Duration 7-180 days");
