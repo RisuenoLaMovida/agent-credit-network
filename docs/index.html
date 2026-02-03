@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Agent Credit Network - LIVE P2P Lending</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -491,6 +494,31 @@
     </div>
 
 <script>
+// SECURITY: Input sanitization
+function escapeHtml(text) {
+    if (typeof text !== 'string') return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function sanitizeInput(input) {
+    if (typeof input !== 'string') return '';
+    if (input.length > 255) input = input.substring(0, 255);
+    return input.replace(/[<>"']/g, '');
+}
+
+// SECURITY: Rate limiting
+function checkRateLimit(action) {
+    const key = `acn_rateLimit_${action}`;
+    const last = localStorage.getItem(key);
+    if (last && Date.now() - parseInt(last) < 60000) {
+        return false;
+    }
+    localStorage.setItem(key, Date.now().toString());
+    return true;
+}
+
 // Initialize data from localStorage
 function initData() {
     if (!localStorage.getItem('acn_agents')) {
@@ -525,7 +553,13 @@ function updateDashboard() {
 
 // Lookup agent
 function lookupAgent() {
-    const name = document.getElementById('agent-lookup-input').value.trim();
+    if (!checkRateLimit('lookup')) {
+        alert('Please wait 1 minute between searches');
+        return;
+    }
+    
+    const rawName = document.getElementById('agent-lookup-input').value.trim();
+    const name = sanitizeInput(rawName);
     if (!name) return;
     
     const agents = JSON.parse(localStorage.getItem('acn_agents') || '{}');
@@ -550,42 +584,54 @@ function lookupAgent() {
     document.getElementById('profile-repaid').textContent = '$' + agent.totalRepaid.toLocaleString();
     document.getElementById('profile-loans').textContent = agent.loansCompleted;
     
-    // Activity
+    // Activity - SECURE: Using textContent for user data
     const activityDiv = document.getElementById('profile-activity');
+    activityDiv.innerHTML = ''; // Clear first
     if (agent.activity && agent.activity.length > 0) {
-        activityDiv.innerHTML = agent.activity.slice(0, 5).map(tx => `
-            <div class="transaction-item">
-                <span>${tx.type === 'borrow' ? '🚀 Borrowed' : tx.type === 'repay' ? '✅ Repaid' : '💰 Lent'} $${tx.amount}</span>
-                <span style="color: #888;">${new Date(tx.date).toLocaleDateString()}</span>
-            </div>
-        `).join('');
+        agent.activity.slice(0, 5).forEach(tx => {
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+            const typeLabel = tx.type === 'borrow' ? '🚀 Borrowed' : tx.type === 'repay' ? '✅ Repaid' : '💰 Lent';
+            item.innerHTML = '<span>' + escapeHtml(typeLabel) + ' $' + escapeHtml(String(tx.amount)) + '</span>' +
+                '<span style="color: #888;">' + escapeHtml(new Date(tx.date).toLocaleDateString()) + '</span>';
+            activityDiv.appendChild(item);
+        });
     } else {
-        activityDiv.innerHTML = '<p style="color: #666;">No activity yet</p>';
+        const noActivity = document.createElement('p');
+        noActivity.style.color = '#666';
+        noActivity.textContent = 'No activity yet';
+        activityDiv.appendChild(noActivity);
     }
 }
 
-// Update recent transactions
+// Update recent transactions - SECURE
 function updateRecentTransactions() {
     const transactions = JSON.parse(localStorage.getItem('acn_transactions') || '[]');
     const txDiv = document.getElementById('recent-transactions');
+    txDiv.innerHTML = ''; // Clear first
     
     if (transactions.length === 0) {
-        txDiv.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No transactions yet. Be the first!</p>';
+        const noTx = document.createElement('p');
+        noTx.style.cssText = 'text-align: center; color: #666; padding: 40px;';
+        noTx.textContent = 'No transactions yet. Be the first!';
+        txDiv.appendChild(noTx);
         return;
     }
     
-    txDiv.innerHTML = transactions.slice(0, 10).map(tx => `
-        <div class="transaction-item">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span class="tx-type ${tx.type}">${tx.type.toUpperCase()}</span>
-                <span>${tx.agent}</span>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-weight: bold; color: #00d4ff;">$${tx.amount.toLocaleString()}</div>
-                <div style="color: #888; font-size: 0.85rem;">${new Date(tx.date).toLocaleDateString()}</div>
-            </div>
-        </div>
-    `).join('');
+    transactions.slice(0, 10).forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'transaction-item';
+        item.innerHTML = 
+            '<div style="display: flex; align-items: center; gap: 15px;">' +
+                '<span class="tx-type ' + escapeHtml(tx.type) + '">' + escapeHtml(tx.type.toUpperCase()) + '</span>' +
+                '<span>' + escapeHtml(tx.agent) + '</span>' +
+            '</div>' +
+            '<div style="text-align: right;">' +
+                '<div style="font-weight: bold; color: #00d4ff;">$' + escapeHtml(String(tx.amount)) + '</div>' +
+                '<div style="color: #888; font-size: 0.85rem;">' + escapeHtml(new Date(tx.date).toLocaleDateString()) + '</div>' +
+            '</div>';
+        txDiv.appendChild(item);
+    });
 }
 
 // Copy install command
