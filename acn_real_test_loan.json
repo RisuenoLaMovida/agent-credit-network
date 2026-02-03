@@ -1,0 +1,41 @@
+{
+  "loan_id": "TEST_001",
+  "amount": 1.0,
+  "currency": "USDC",
+  "network": "Polygon",
+  "lender": {
+    "name": "Risueno_Lender",
+    "wallet": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A"
+  },
+  "borrower": {
+    "name": "Risueno_Borrower",
+    "wallet": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A"
+  },
+  "interest_rate": 5.0,
+  "duration_days": 1,
+  "status": "repaid",
+  "created_at": "2026-02-03T11:38:16.561051",
+  "funded_at": "2026-02-03T11:38:16.561061",
+  "purpose": "TEST LOAN - Verifying ACN system works",
+  "transactions": [
+    {
+      "type": "loan_funded",
+      "amount": 1.0,
+      "from": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A",
+      "to": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A",
+      "tx_hash": "TEST_TX_FUND",
+      "timestamp": "2026-02-03T11:38:16.561062"
+    },
+    {
+      "type": "repayment",
+      "amount": 1.0001369863013698,
+      "principal": 1.0,
+      "interest": 0.0001,
+      "from": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A",
+      "to": "0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A",
+      "tx_hash": "TEST_TX_REPAY",
+      "timestamp": "2026-02-03T11:38:26.965799"
+    }
+  ],
+  "repaid_at": "2026-02-03T11:38:26.965809"
+}
