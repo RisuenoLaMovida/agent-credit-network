@@ -1,0 +1,18 @@
+{
+  "name": "acn-contracts",
+  "version": "1.0.0",
+  "description": "Agent Credit Network Smart Contracts",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run deploy.js --network polygonMumbai",
+    "deploy:mainnet": "hardhat run deploy.js --network polygon",
+    "verify": "hardhat verify"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.19.0"
+  }
+}
