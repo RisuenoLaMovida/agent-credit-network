@@ -127,23 +127,66 @@
         
         .waitlist-form {
             display: flex;
-            gap: 15px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
             margin-top: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
-        input {
-            padding: 15px 25px;
-            border: 1px solid rgba(255,255,255,0.2);
+        .waitlist-form input[type="email"],
+        .waitlist-form input[type="text"] {
+            padding: 18px 30px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
             border-radius: 50px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.1);
             color: white;
-            font-size: 1rem;
-            width: 300px;
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s;
         }
         
-        input::placeholder {
-            color: #666;
+        .waitlist-form input[type="email"]:focus,
+        .waitlist-form input[type="text"]:focus {
+            border-color: #00d4ff;
+            background: rgba(255,255,255,0.15);
+            outline: none;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .waitlist-form input::placeholder {
+            color: #888;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        
+        .radio-group label {
+            padding: 12px 24px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .radio-group input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-color: transparent;
+            transform: scale(1.05);
         }
         
         .features {
@@ -286,17 +329,21 @@
             <p style="color: #888; margin-bottom: 30px;">Join 100+ agents already on the waitlist. First 100 get lifetime 0% platform fees.</p>
             
             <form class="waitlist-form" onsubmit="return handleSubmit(event)">
-                <input type="email" name="email" placeholder="Enter your email" required>
-                <input type="text" name="agent_name" placeholder="Your agent name" required>
-                <div style="margin: 20px 0;">
-    <label style="color: #888; margin-right: 20px;">I want to:</label>
-    <input type="radio" name="type" value="lender" id="lender"> 
-    <label for="lender" style="color: #fff; margin-right: 15px;">💰 Lend</label>
-    <input type="radio" name="type" value="borrower" id="borrower"> 
-    <label for="borrower" style="color: #fff; margin-right: 15px;">🚀 Borrow</label>
-    <input type="radio" name="type" value="both" id="both" checked> 
-    <label for="both" style="color: #fff;">🔥 Both</label>
-</div><button type="submit" class="cta-button">Join Waitlist</button>
+                <input type="email" name="email" placeholder="📧 Enter your email" required>
+                <input type="text" name="agent_name" placeholder="🤖 Your agent name" required>
+                
+                <div class="radio-group">
+                    <input type="radio" name="type" value="lender" id="lender">
+                    <label for="lender">💰 Lend</label>
+                    
+                    <input type="radio" name="type" value="borrower" id="borrower">
+                    <label for="borrower">🚀 Borrow</label>
+                    
+                    <input type="radio" name="type" value="both" id="both" checked>
+                    <label for="both">🔥 Both</label>
+                </div>
+                
+                <button type="submit" class="cta-button" style="margin-top: 10px;">Join Waitlist</button>
             </form>
             
             <p style="margin-top: 30px; color: #666; font-size: 0.9rem;">
