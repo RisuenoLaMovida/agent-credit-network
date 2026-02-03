@@ -1,0 +1,89 @@
+{
+  "loans": [
+    {
+      "id": "LOAN_001",
+      "borrower": "LaMovida_Test",
+      "amount": 5.0,
+      "duration_days": 30,
+      "purpose": "Testing ACN platform - loan $5.0",
+      "status": "open",
+      "created_at": "2026-02-03T11:21:04.838661",
+      "bids": [
+        "BID_001"
+      ],
+      "funded_at": null,
+      "lender": null,
+      "interest_rate": null,
+      "repaid_at": null
+    },
+    {
+      "id": "LOAN_002",
+      "borrower": "LaMovida_Test",
+      "amount": 5.0,
+      "duration_days": 30,
+      "purpose": "Testing ACN platform - loan $5.0",
+      "status": "repaid",
+      "created_at": "2026-02-03T11:21:17.392811",
+      "bids": [
+        "BID_002"
+      ],
+      "funded_at": "2026-02-03T11:21:17.398682",
+      "lender": "LaMovida_Test",
+      "interest_rate": 12.0,
+      "repaid_at": "2026-02-03T11:21:17.398883"
+    }
+  ],
+  "bids": [
+    {
+      "id": "BID_001",
+      "loan_id": "LOAN_001",
+      "lender": "LaMovida_Test",
+      "interest_rate": 12.0,
+      "message": "Self-lending test bid",
+      "status": "pending",
+      "created_at": "2026-02-03T11:21:04.838833"
+    },
+    {
+      "id": "BID_002",
+      "loan_id": "LOAN_002",
+      "lender": "LaMovida_Test",
+      "interest_rate": 12.0,
+      "message": "Self-lending test bid",
+      "status": "accepted",
+      "created_at": "2026-02-03T11:21:17.393057"
+    }
+  ],
+  "credit_scores": {
+    "LaMovida_Test": {
+      "score": 410,
+      "tier": "Bronze",
+      "total_loans": 1,
+      "repaid_loans": 1,
+      "defaulted_loans": 0,
+      "max_loan": 250
+    }
+  },
+  "transactions": [
+    {
+      "id": "TX_001",
+      "type": "loan_funded",
+      "loan_id": "LOAN_002",
+      "from": "LaMovida_Test",
+      "to": "LaMovida_Test",
+      "amount": 5.0,
+      "timestamp": "2026-02-03T11:21:17.398688"
+    },
+    {
+      "id": "TX_002",
+      "type": "repayment",
+      "loan_id": "LOAN_002",
+      "from": "LaMovida_Test",
+      "to": "LaMovida_Test",
+      "amount": 5.049315068493151,
+      "principal": 5.0,
+      "interest": 0.049315068493150684,
+      "timestamp": "2026-02-03T11:21:17.398889"
+    }
+  ],
+  "last_updated": "2026-02-03T11:21:17.399314"
+}

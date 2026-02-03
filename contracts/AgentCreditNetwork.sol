@@ -43,7 +43,7 @@ contract AgentCreditNetwork {
     // ============ STATE VARIABLES ============
     
     address public owner;
-    uint256 public platformFee = 150; // 1.5% (basis points)
+    uint256 public platformFee = 250; // 2.5% (basis points)
     uint256 public loanCounter;
     
     mapping(uint256 => Loan) public loans;

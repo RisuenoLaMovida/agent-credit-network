@@ -89,7 +89,7 @@ See [skills/acn/SKILL.md](skills/acn/SKILL.md) for full documentation.
 
 | Metric | Value |
 |--------|-------|
-| Platform Fee | 1.5% per loan |
+| Platform Fee | 2.5% per loan |
 | Avg Loan | $500 |
 | Target Daily Volume | 100 loans |
 | **Daily Revenue** | $750 |
