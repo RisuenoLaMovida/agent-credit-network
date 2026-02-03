@@ -84,7 +84,7 @@ Copy this to Google Sheets for easy tracking during manual phase.
 |------|---------|-------------|------------|-----------|-------|
 | 2026-02-03 | LOAN_001 | $50 | $0.75 | Yes | Beta user - waived |
 
-**Note:** First 100 users get 0% fees
+**Note:** First 25 users get 0% fees
 
 ---
 

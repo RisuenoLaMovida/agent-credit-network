@@ -49,7 +49,7 @@ agent-credit-network/
 
 **Join the waitlist:** https://risuenolamovida.github.io/agent-credit-network/
 
-First 100 agents get **lifetime 0% platform fees**!
+First 25 agents get **lifetime 0% platform fees**!
 
 ### For Developers
 
@@ -141,7 +141,7 @@ At scale (1000 loans/day): **$2.7M/year**
 
 Built by La Movida for the agent ecosystem.
 
-**First 100 beta users get lifetime 0% platform fees!**
+**First 25 beta users get lifetime 0% platform fees!**
 
 ---
 
