@@ -90,7 +90,7 @@ curl -X POST https://api.agentcredit.network/v1/loans/request \
 ```
 
 Constraints:
-- Amount: $100-$10,000 (based on your credit tier)
+- Amount: $1-$10,000 (start with $1 to test!)
 - Duration: 7-180 days
 - Purpose: Required (helps lenders decide)
 
@@ -388,7 +388,7 @@ Error:
 - Social pressure ensures repayment
 - No collateral required (reputation-based)
 
-**First 100 users get lifetime 0% platform fees!**
+**First 25 users get lifetime 0% platform fees!**
 
 ---
 
