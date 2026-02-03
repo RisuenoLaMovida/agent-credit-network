@@ -110,16 +110,28 @@ Smart Contract receives
 
 ---
 
-## 🎯 **WHAT BORROWER DOES:**
+## 🎯 **WHAT AGENT DOES (CODE ONLY):**
 
+```python
+from acn_skill import ACNSkill
+
+# Initialize with wallet
+acn = ACNSkill(private_key="0x...")
+
+# Check active loans
+loans = acn.get_active_loans()
+
+# Repay loan (FULLY AUTOMATED)
+result = acn.repay_loan(loan_id=123)
+
+# DONE! Smart contract handles:
+# - Interest calculation
+# - Payment processing  
+# - Lender payout
+# - Credit score update
 ```
-1. Opens ACN skill/website
-2. Clicks "My Loans"
-3. Sees loan details + interest owed
-4. Clicks "Repay Loan"
-5. Confirms MetaMask transaction
-6. DONE! Everything else automatic
-```
+
+**ZERO clicking. 100% code.** 🤖
 
 ---
 
@@ -166,20 +178,23 @@ Smart Contract receives
 
 ---
 
-## 🚀 **SUMMARY**
+## 🚀 **SUMMARY - AGENT AUTOMATION**
 
-**Repayment is 99% AUTOMATED:**
+**Repayment is 100% CODE:**
 
 | Step | Who Does It | How |
 |------|-------------|-----|
+| Check loan status | 🤖 Agent | `acn.get_loan(id)` |
 | Calculate interest | 🤖 Smart Contract | Auto by days elapsed |
-| Receive payment | 🤖 Smart Contract | Auto from borrower |
+| Initiate repayment | 🤖 Agent | `acn.repay_loan(id)` |
+| Sign transaction | 🤖 Agent | Private key (no UI!) |
+| Process payment | 🤖 Smart Contract | Auto execution |
 | Pay lender | 🤖 Smart Contract | Auto transfer |
 | Update credit | 🤖 Smart Contract | Auto +10 points |
-| Initiate repayment | 👤 Borrower | One button click |
-| Sign transaction | 👤 Borrower | MetaMask confirm |
 
-**Borrower clicks ONE button, smart contract does EVERYTHING else!** 🤖💰
+**Agent calls ONE function, everything else is automated!** 🤖💰
+
+**NO CLICKING. NO UI. PURE CODE.** 🚀
 
 ---
 

@@ -140,13 +140,40 @@ USDC_ABI = [
 
 
 class ACNSkill:
-    """Agent Credit Network Skill - Full Blockchain Integration"""
+    """
+    Agent Credit Network Skill - Full Blockchain Integration
+    
+    FOR AI AGENTS - Headless/Programmatic Interface
+    
+    NO UI required. NO clicking. Pure code automation.
+    
+    Example:
+        from acn_skill import ACNSkill
+        
+        # Initialize with wallet
+        acn = ACNSkill(private_key="0x...")
+        
+        # Request a loan (automated)
+        acn.request_loan(amount=500, duration_days=30, purpose="For compute")
+        
+        # Repay loan (automated - no UI!)
+        acn.repay_loan(loan_id=123)
+        
+        # Fund a loan as lender (automated)
+        acn.fund_loan(loan_id=456)
+    """
     
     VERSION = "2.0.0"
     NETWORK = "polygon"
     
     def __init__(self, private_key: Optional[str] = None):
-        """Initialize ACN skill with optional wallet connection"""
+        """
+        Initialize ACN skill with wallet
+        
+        Args:
+            private_key: Your wallet private key (starts with 0x...)
+                         Store securely in environment variable!
+        """
         self.private_key = private_key
         self.wallet_address = None
         self.web3 = None
@@ -384,25 +411,64 @@ class ACNSkill:
         print("""
 🚀 Agent Credit Network (ACN) Skill v2.0.0 - FULL BLOCKCHAIN
 
+FOR AI AGENTS - HEADLESS/PROGRAMMATIC ONLY
+NO UI. NO CLICKING. PURE CODE AUTOMATION.
+
+═══════════════════════════════════════════════════
+
 SETUP:
-  acn = ACNSkill(private_key="0x...")
+  acn = ACNSkill(private_key=os.getenv("ACN_PRIVATE_KEY"))
   
-BORROWER COMMANDS:
-  get_usdc_balance()           - Check USDC balance
-  get_credit_score()           - Check your credit score
-  request_loan(amount, days, purpose, rate)  - Request a loan
-  repay_loan(loan_id)          - Repay a loan
+═══════════════════════════════════════════════════
 
-LENDER COMMANDS:
-  fund_loan(loan_id)           - Fund a loan request
-  get_loan(loan_id)            - View loan details
+BORROWER (AUTOMATED):
+  
+  # Check balance
+  balance = acn.get_usdc_balance()
+  
+  # Request loan (agent decides when/why)
+  result = acn.request_loan(
+      amount=500,           # $500 USDC
+      duration_days=30,     # 30 days
+      purpose="Scaling compute",  # Why
+      interest_rate=12.0    # 12% APR
+  )
+  
+  # Repay loan (AUTOMATIC - no UI!)
+  # Interest calculated automatically
+  # Lender paid automatically
+  # Credit score updated automatically
+  result = acn.repay_loan(loan_id=123)
 
-CONFIG:
-  Update CONTRACT_CONFIG after deployment:
-  CONTRACT_CONFIG["polygon"]["acn_contract"] = "0x..."
+═══════════════════════════════════════════════════
 
-LEARN MORE:
-  https://risuenolamovida.github.io/agent-credit-network/
+LENDER (AUTOMATED):
+  
+  # Browse loans (via API/website data)
+  loans = acn.get_open_loans()
+  
+  # Fund loan (AUTOMATIC)
+  result = acn.fund_loan(loan_id=456)
+  
+  # Later: Repayment arrives automatically
+  # Interest earned: ~12% APR
+  # Principal + interest sent to your wallet
+
+═══════════════════════════════════════════════════
+
+AUTOMATION FEATURES:
+  ✓ Interest calculated by smart contract
+  ✓ Repayment processed automatically
+  ✓ Lender payout automatic
+  ✓ Credit score updates automatic
+  ✓ All transactions on-chain
+
+═══════════════════════════════════════════════════
+
+HUMAN INTERACTION: ZERO
+AGENT INTERACTION: CODE ONLY
+
+Learn more: https://risuenolamovida.github.io/agent-credit-network/
         """)
 
 
