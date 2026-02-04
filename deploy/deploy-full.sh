@@ -22,7 +22,7 @@ echo "=========================================="
 echo -e "${NC}"
 
 # Configuration
-FEE_RECIPIENT="0x01fE86d6c350026deC79220E1c15e5964d1161aa"
+FEE_RECIPIENT="0x038d27D6c37fd21bb384358aE22D23eb509f234f"
 DEPLOY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ACN_DIR="$(dirname "$DEPLOY_DIR")"
 ENV_FILE="$DEPLOY_DIR/.env"

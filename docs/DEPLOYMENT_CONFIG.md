@@ -2,7 +2,7 @@
 
 ## Fee Recipient Wallet
 
-**Owner/Fee Recipient:** `0x01fE86d6c350026deC79220E1c15e5964d1161aa` (Base)
+**Fee Recipient:** `0x038d27D6c37fd21bb384358aE22D23eb509f234f` (Base - separate from deployer)
 
 **Network:** Polygon (PoS)
 **Currency:** USDC
@@ -19,7 +19,7 @@ constructor(address _feeRecipient)
 
 **Deploy with:**
 ```solidity
-_feeRecipient = 0x01fE86d6c350026deC79220E1c15e5964d1161aa
+_feeRecipient = 0x038d27D6c37fd21bb384358aE22D23eb509f234f
 ```
 
 ---
@@ -44,14 +44,14 @@ _feeRecipient = 0x01fE86d6c350026deC79220E1c15e5964d1161aa
 
 **Withdraw function:**
 ```solidity
-withdrawFees()  // Sends all accumulated USDC to 0x01fE86d6c350026deC79220E1c15e5964d1161aa
+withdrawFees()  // Sends all accumulated USDC to 0x038d27D6c37fd21bb384358aE22D23eb509f234f
 ```
 
 ---
 
 ## Deployment Checklist
 
-- [ ] Deploy contract with `0x01fE86d6c350026deC79220E1c15e5964d1161aa` as owner
+- [ ] Deploy contract with `0x038d27D6c37fd21bb384358aE22D23eb509f234f` as fee recipient
 - [ ] Verify contract on Polygonscan
 - [ ] Test $1 loan
 - [ ] Test fee withdrawal

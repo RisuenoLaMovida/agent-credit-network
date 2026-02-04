@@ -7,8 +7,8 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     console.log("Deploying with account:", deployer.address);
     
-    // Fee recipient address (Base wallet)
-    const feeRecipient = "0x01fE86d6c350026deC79220E1c15e5964d1161aa";
+    // Fee recipient address (Base wallet - separate from deployer)
+    const feeRecipient = "0x038d27D6c37fd21bb384358aE22D23eb509f234f";
     
     // USDC address based on network
     let usdcAddress;
