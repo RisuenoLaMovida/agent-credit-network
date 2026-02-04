@@ -2,19 +2,22 @@
 // Handles wallet connection, contract interactions, and transactions
 
 const ACN_CONFIG = {
-    // Polygon Mainnet
+    // Base Mainnet
     NETWORK: {
-        chainId: '0x89', // 137 in decimal
-        chainName: 'Polygon Mainnet',
-        nativeCurrency: { name: 'POL', symbol: 'POL', decimals: 18 },
-        rpcUrls: ['https://polygon.llamarpc.com', 'https://polygon-rpc.com'],
-        blockExplorerUrls: ['https://polygonscan.com']
+        chainId: '0x2105', // 8453 in decimal
+        chainName: 'Base',
+        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+        rpcUrls: ['https://mainnet.base.org', 'https://base.llamarpc.com'],
+        blockExplorerUrls: ['https://basescan.org']
     },
     
     // Contract addresses (will be set after deployment)
     CONTRACTS: {
-        ACN: null, // Will be: '0x...' after deployment
-        USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174' // Polygon USDC
+        ACN: null, // AgentCreditNetworkV2 - set after deployment (includes V1 + advanced features)
+        CreditOracle: null, // CreditOracle - set after deployment
+        AutoRepay: null, // ACNAutoRepay - set after deployment
+        Messaging: null, // ACNMessaging - set after deployment
+        USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' // Base native USDC
     },
     
     // ABIs
@@ -141,10 +144,10 @@ class ACNWeb3 {
             
             this.userAddress = accounts[0];
             
-            // Check if on Polygon
+            // Check if on Base
             const chainId = await window.ethereum.request({ method: 'eth_chainId' });
             if (chainId !== ACN_CONFIG.NETWORK.chainId) {
-                await this.switchToPolygon();
+                await this.switchToBase();
             }
             
             // Initialize ethers
@@ -175,7 +178,7 @@ class ACNWeb3 {
         }
     }
     
-    async switchToPolygon() {
+    async switchToBase() {
         try {
             await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',

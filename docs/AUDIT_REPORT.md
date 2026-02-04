@@ -44,7 +44,7 @@
 | Wallet | Status | Use |
 |--------|--------|-----|
 | `0x8B6EDE9575892389CF5463ea20D500d2FF12E2D8` | ✅ NEW | Deployer/Team |
-| `0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86` | ✅ NEW | Fee Recipient |
+| `0x01fE86d6c350026deC79220E1c15e5964d1161aa` | ✅ NEW | Fee Recipient |
 | `0x22DD...` | ❌ COMPROMISED | DO NOT USE |
 
 **SECURITY STATUS:** ✅ Using new wallets only

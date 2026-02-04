@@ -29,7 +29,7 @@
 
 ### Phase 1: Smart Contract Deployment (2 hours)
 - [ ] Deploy AgentCreditNetwork.sol to Polygon
-  - Constructor arg: `0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86`
+  - Constructor arg: `0x01fE86d6c350026deC79220E1c15e5964d1161aa`
 - [ ] Deploy CreditOracle.sol
 - [ ] Verify contracts on Polygonscan
 - [ ] Test $1 loan end-to-end

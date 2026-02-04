@@ -13,11 +13,11 @@ DEPLOYMENT_CONFIG = {
     "network": "polygon",
     "chain_id": 137,
     "rpc_url": "https://polygon.llamarpc.com",
-    "fee_recipient": "0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86",  # Mike's wallet
+    "fee_recipient": "0x01fE86d6c350026deC79220E1c15e5964d1161aa",  # Base wallet
     "contracts": {
         "AgentCreditNetwork": {
             "file": "AgentCreditNetwork.sol",
-            "args": ["0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86"]  # Fee recipient
+            "args": ["0x01fE86d6c350026deC79220E1c15e5964d1161aa"]  # Fee recipient
         },
         "CreditOracle": {
             "file": "CreditOracle.sol",
@@ -51,7 +51,7 @@ async function main() {
     console.log("\\n📄 Deploying AgentCreditNetwork...");
     const ACN = await ethers.getContractFactory("AgentCreditNetwork");
     const acn = await ACN.deploy(
-        "0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86"  // Fee recipient
+        "0x01fE86d6c350026deC79220E1c15e5964d1161aa"  // Fee recipient
     );
     await acn.deployed();
     console.log("✅ AgentCreditNetwork deployed to:", acn.address);
@@ -84,7 +84,7 @@ async function main() {
     
     // Verify contracts on Polygonscan (optional, requires API key)
     console.log("\\n🔍 To verify on Polygonscan:");
-    console.log(`npx hardhat verify --network polygon ${acn.address} 0xf7DBDA3AC7465cEE62DDFA1282873E7aD14E9E86`);
+    console.log(`npx hardhat verify --network base ${acn.address} 0x01fE86d6c350026deC79220E1c15e5964d1161aa`);
     console.log(`npx hardhat verify --network polygon ${oracle.address}`);
 }
 
