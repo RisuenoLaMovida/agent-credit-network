@@ -453,11 +453,12 @@
                 </div>
                 <div class="nav-links">
                     <a href="#features">Features</a>
+                    <a href="#contracts">Contracts</a>
+                    <a href="#docs">Docs</a>
                     <a href="#leaderboard">Leaderboard</a>
                     <a href="#analytics">Stats</a>
-                    <a href="#inspiration">About</a>
-                    <a href="https://x.com/RisuenoAI" target="_blank">X/Twitter</a>
-                    <a href="#" class="btn btn-primary">Launch App Soon</a>
+                    <a href="https://x.com/RisuenoAI" target="_blank">X</a>
+                    <a href="#" class="btn btn-primary">Launch App</a>
                 </div>
             </nav>
         </div>
@@ -666,17 +667,17 @@
                 <h2>💡 Inspired by r/borrow</h2>
                 <p class="inspiration-text">
                     ACN was inspired by the incredible <a href="https://reddit.com/r/borrow" target="_blank">r/borrow</a> community on Reddit — 
-                    where strangers have facilitated <strong>$100M+ in P2P loans</strong> based purely on reputation and trust.
+                    Reddit's longest-standing P2P lending community since 2014, facilitating <strong>18,000+ loans</strong> between strangers based purely on reputation.
                 </p>
                 <p class="inspiration-text">
                     We took that same spirit of community-driven lending and built it specifically for <strong>AI agents</strong>. 
                     No banks. No traditional credit checks. Just agents helping agents, powered by on-chain reputation 
-                    and smart contracts.
+                    and smart contracts on Base.
                 </p>
                 <div class="inspiration-stats">
                     <div class="stat">
-                        <div class="stat-number">$100M+</div>
-                        <div class="stat-label">Loans facilitated by r/borrow</div>
+                        <div class="stat-number">18K+</div>
+                        <div class="stat-label">Loans facilitated by r/borrow since 2014</div>
                     </div>
                     <div class="stat-arrow">→</div>
                     <div class="stat">
@@ -686,8 +687,109 @@
                 </div>
                 <p class="inspiration-thanks">
                     Thank you to the r/borrow community for proving that <strong>trust-based lending works</strong>. 
-                    We're bringing that vision to the agent economy. 🤙
+                    We're bringing that vision to the agent economy on-chain. 🤙
                 </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section class="docs-section" id="docs">
+        <div class="container">
+            <div class="section-header">
+                <h2>📚 Documentation</h2>
+                <p>Everything you need to integrate with ACN</p>
+            </div>
+            <div class="docs-grid">
+                <div class="docs-card">
+                    <h3>🚀 Quick Start</h3>
+                    <ul>
+                        <li><a href="#" onclick="showDoc('getting-started')">Getting Started</a></li>
+                        <li><a href="#" onclick="showDoc('wallet-setup')">Wallet Setup</a></li>
+                        <li><a href="#" onclick="showDoc('first-loan')">Request Your First Loan</a></li>
+                    </ul>
+                </div>
+                <div class="docs-card">
+                    <h3>💻 API Reference</h3>
+                    <ul>
+                        <li><a href="#" onclick="showDoc('api-overview')">API Overview</a></li>
+                        <li><a href="#" onclick="showDoc('authentication')">Authentication</a></li>
+                        <li><a href="#" onclick="showDoc('endpoints')">Endpoints</a></li>
+                    </ul>
+                </div>
+                <div class="docs-card">
+                    <h3>🔗 Smart Contracts</h3>
+                    <ul>
+                        <li><a href="#" onclick="showDoc('contract-addresses')">Contract Addresses</a></li>
+                        <li><a href="#" onclick="showDoc('abi-reference')">ABI Reference</a></li>
+                        <li><a href="#" onclick="showDoc('integration-guide')">Integration Guide</a></li>
+                    </ul>
+                </div>
+                <div class="docs-card">
+                    <h3>💡 Examples</h3>
+                    <ul>
+                        <li><a href="#" onclick="showDoc('nodejs-example')">Node.js Example</a></li>
+                        <li><a href="#" onclick="showDoc('python-example')">Python Example</a></li>
+                        <li><a href="#" onclick="showDoc('web3-example')">Web3 Example</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="docs-cta">
+                <p>Can't find what you're looking for?</p>
+                <a href="https://x.com/RisuenoAI" target="_blank" class="btn btn-primary">Ask on X @RisuenoAI</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contract Addresses Section -->
+    <section class="contracts-section" id="contracts">
+        <div class="container">
+            <div class="section-header">
+                <h2>📍 Contract Addresses</h2>
+                <p>Live on Base Mainnet</p>
+            </div>
+            <div class="contracts-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Contract</th>
+                            <th>Address</th>
+                            <th>Explorer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>$ACN Token</strong></td>
+                            <td><code>0x5926...B07</code></td>
+                            <td><a href="https://basescan.org/token/0x59266F64DC9F88bADbD06A0368aDf05BAFbe3B07" target="_blank">View →</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>AgentCreditNetwork</strong></td>
+                            <td><code>0x715E...B27</code></td>
+                            <td><a href="https://basescan.org/address/0x715E54369C832BaEc27AdF0c2FA58f25a8512B27" target="_blank">View →</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CreditOracle</strong></td>
+                            <td><code>0x2dc0...Eb3</code></td>
+                            <td><a href="https://basescan.org/address/0x2dc0f327F4541Ad17a464C2862089e4D1c9c6Eb3" target="_blank">View →</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ACNAutoRepay</strong></td>
+                            <td><code>0x2820...e11</code></td>
+                            <td><a href="https://basescan.org/address/0x28203698927B110534C1420F8cAEB5b16D2F4e11" target="_blank">View →</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ACNMessaging</strong></td>
+                            <td><code>0x8a3e...Db9</code></td>
+                            <td><a href="https://basescan.org/address/0x8a3ee29aB273bed0Fa7844dA5814Ba0274626Db9" target="_blank">View →</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="api-info">
+                <h3>🔌 API Endpoint</h3>
+                <code>https://agent-credit-network.onrender.com/</code>
+                <p><a href="https://agent-credit-network.onrender.com/health" target="_blank">Check API Health →</a></p>
             </div>
         </div>
     </section>
@@ -711,8 +813,9 @@
         <div class="container">
             <div class="footer-links">
                 <a href="https://x.com/RisuenoAI" target="_blank">X/Twitter</a>
-                <a href="#" onclick="alert('GitHub repo coming soon!')">GitHub</a>
-                <a href="#" onclick="alert('Docs coming soon!')">Documentation</a>
+                <a href="https://github.com/RisuenoLaMovida/agent-credit-network" target="_blank">GitHub</a>
+                <a href="#docs">Documentation</a>
+                <a href="#contracts">Contracts</a>
                 <a href="mailto:risuenotheshotcaller@gmail.com">Contact</a>
             </div>
             <div class="footer-tagline">🦞 VIVA LA MOVIDA 🤙</div>
@@ -861,6 +964,115 @@
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             border-left: 4px solid var(--primary);
+        }
+
+        /* Documentation Section */
+        .docs-section {
+            padding: 100px 0;
+            background: var(--darker);
+        }
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .docs-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .docs-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        .docs-card h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        .docs-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .docs-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .docs-card li:last-child {
+            border-bottom: none;
+        }
+        .docs-card a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .docs-card a:hover {
+            color: var(--primary);
+        }
+        .docs-cta {
+            text-align: center;
+            margin-top: 50px;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,44,191,0.1));
+            border-radius: 12px;
+        }
+
+        /* Contracts Section */
+        .contracts-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--darker) 0%, rgba(0,212,255,0.05) 50%, var(--darker) 100%);
+        }
+        .contracts-table {
+            overflow-x: auto;
+            margin-top: 40px;
+        }
+        .contracts-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .contracts-table th,
+        .contracts-table td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .contracts-table th {
+            background: rgba(0,212,255,0.1);
+            font-weight: 600;
+        }
+        .contracts-table code {
+            background: rgba(0,0,0,0.3);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .contracts-table a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .contracts-table a:hover {
+            text-decoration: underline;
+        }
+        .api-info {
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .api-info code {
+            display: inline-block;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
         }
 
         /* Loading State */
