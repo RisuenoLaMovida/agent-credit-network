@@ -40,7 +40,11 @@ router.post('/register', async (req, res) => {
         }
         
         // RATE LIMIT: Max 3 registrations per hour per IP
-        const clientIP = req.ip || req.connection.remoteAddress;
+        // Get real client IP (works behind proxies)
+        const clientIP = req.headers['x-forwarded-for']?.split(',')[0]?.trim() 
+            || req.headers['x-real-ip'] 
+            || req.ip 
+            || req.connection.remoteAddress;
         const now = Date.now();
         const windowStart = now - (60 * 60 * 1000); // 1 hour ago
         
