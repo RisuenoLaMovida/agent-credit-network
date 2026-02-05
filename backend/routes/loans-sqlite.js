@@ -56,6 +56,44 @@ router.post('/request', async (req, res) => {
             });
         }
         
+        // Get credit score and check max loan amount
+        const creditResult = await db.get('SELECT * FROM credit_scores WHERE agent_address = ?', [borrower_address]);
+        if (creditResult.rows.length === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'Credit score not found. Contact support.'
+            });
+        }
+        
+        const credit = creditResult.rows[0];
+        const maxLoanAmount = credit.max_loan_amount;
+        
+        if (amount > maxLoanAmount) {
+            return res.status(400).json({
+                success: false,
+                error: `Loan amount exceeds your tier limit. Your max: $${maxLoanAmount / 1000000} (Tier: ${credit.tier})`,
+                max_allowed: maxLoanAmount,
+                your_tier: credit.tier,
+                your_score: credit.score
+            });
+        }
+        
+        // Check for active loans (prevent multiple simultaneous loans)
+        const activeLoansResult = await db.get(`
+            SELECT COUNT(*) as count FROM loans 
+            WHERE borrower_address = ? 
+            AND status IN (?, ?)
+        `, [borrower_address, LOAN_STATUS.REQUESTED, LOAN_STATUS.FUNDED]);
+        
+        if (activeLoansResult.rows[0].count >= 3) {
+            return res.status(400).json({
+                success: false,
+                error: 'You have too many active loans. Repay or cancel existing loans before requesting new ones.',
+                active_loans: activeLoansResult.rows[0].count,
+                max_allowed: 3
+            });
+        }
+        
         // Get next loan ID
         const counterResult = await db.get('SELECT MAX(loan_id) as max_id FROM loans');
         const loanId = (counterResult.rows[0]?.max_id || 0) + 1;
