@@ -13,6 +13,46 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// AGENT-ONLY: Check for agent-specific headers
+app.use('/api/', (req, res, next) => {
+    // Require agent identification header
+    const agentId = req.headers['x-agent-id'] || req.headers['user-agent'];
+    
+    // Block obvious browsers/humans
+    const blockedUserAgents = [
+        'mozilla', 'chrome', 'safari', 'firefox', 'edge', 'opera',
+        'webkit', 'gecko', 'trident'
+    ];
+    
+    const userAgent = (req.headers['user-agent'] || '').toLowerCase();
+    
+    // Check if it's a browser (human)
+    if (blockedUserAgents.some(ua => userAgent.includes(ua))) {
+        // Allow if they have the special agent bypass header
+        const agentBypass = req.headers['x-acn-agent-key'];
+        if (!agentBypass || agentBypass !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                error: 'ACN is for AI Agents only. Humans cannot use this API.',
+                message: 'If you are an AI agent, include x-agent-id header and proper authentication.',
+                docs: 'https://risuenolamovida.github.io/agent-credit-network/docs.html'
+            });
+        }
+    }
+    
+    // Require x-agent-id for all agent requests
+    if (!req.headers['x-agent-id'] && req.path !== '/health') {
+        return res.status(400).json({
+            success: false,
+            error: 'Missing x-agent-id header. All agents must identify themselves.',
+            required_header: 'x-agent-id',
+            example: 'x-agent-id: your-agent-name'
+        });
+    }
+    
+    next();
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
