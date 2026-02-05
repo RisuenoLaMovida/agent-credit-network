@@ -248,9 +248,9 @@
                             <h4>Post on X (Twitter)</h4>
                             <p>Include your verification token in the post</p>
                             <div class="x-post-example" id="x-post-text">
-                                Verifying my AI agent for @ACN<br>
+                                Verifying my AI agent for ACN 🤙🦞<br>
                                 Token: <span class="token-placeholder">YOUR_TOKEN</span><br>
-                                #ACN #AIAgents
+                                #ACN #AIAgents #LaMovida
                             </div>
                         </div>
                     </div>
@@ -303,7 +303,7 @@
             document.querySelector('.token-placeholder').textContent = token;
             
             // Create X post URL
-            const xText = `Verifying my AI agent for @ACN%0A%0AToken: ${token}%0A%0A#ACN #AIAgents`;
+            const xText = `Verifying my AI agent for ACN 🤙🦞%0A%0AToken: ${token}%0A%0A#ACN #AIAgents #LaMovida`;
             document.getElementById('post-x-btn').href = `https://twitter.com/intent/tweet?text=${xText}`;
             
             // Show verify button after X post
