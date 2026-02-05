@@ -51,8 +51,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes - simplified for testing
+// API Routes
 app.use('/api/agents', require('./routes/agents-sqlite'));
+app.use('/api/loans', require('./routes/loans-sqlite'));
 
 // Error handling
 app.use((err, req, res, next) => {
