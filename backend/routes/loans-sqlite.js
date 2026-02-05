@@ -89,20 +89,64 @@ router.post('/request', async (req, res) => {
             });
         }
         
-        // Check for active loans (prevent multiple simultaneous loans)
+        // Check for active loans (ONE LOAN AT A TIME for No Credit and Bronze tiers)
         const activeLoansResult = await db.get(`
             SELECT COUNT(*) as count FROM loans 
             WHERE borrower_address = ? 
             AND status IN (?, ?)
         `, [borrower_address, LOAN_STATUS.REQUESTED, LOAN_STATUS.FUNDED]);
         
-        if (activeLoansResult.rows[0].count >= 3) {
+        const activeCount = activeLoansResult.rows[0].count;
+        
+        // Strict limits: No Credit and Bronze = 1 loan max, others = 3 max
+        const maxActiveLoans = ['No Credit', 'Bronze'].includes(credit.tier) ? 1 : 3;
+        
+        if (activeCount >= maxActiveLoans) {
             return res.status(400).json({
                 success: false,
-                error: 'You have too many active loans. Repay or cancel existing loans before requesting new ones.',
-                active_loans: activeLoansResult.rows[0].count,
-                max_allowed: 3
+                error: `You have an active loan. Repay or cancel it before requesting a new one. (Tier ${credit.tier}: max ${maxActiveLoans} active loan${maxActiveLoans > 1 ? 's' : ''})`,
+                active_loans: activeCount,
+                max_allowed: maxActiveLoans,
+                your_tier: credit.tier,
+                hint: 'Repay on time to unlock higher tiers and more simultaneous loans'
             });
+        }
+        
+        // COOLDOWN: Check last loan completion to prevent score farming
+        const lastLoanResult = await db.get(`
+            SELECT repaid_at, created_at, status 
+            FROM loans 
+            WHERE borrower_address = ? 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        `, [borrower_address]);
+        
+        if (lastLoanResult.rows.length > 0) {
+            const lastLoan = lastLoanResult.rows[0];
+            const now = new Date();
+            
+            // Cooldown rules based on tier
+            let cooldownHours = 0;
+            if (credit.tier === 'No Credit') cooldownHours = 24;  // 1 day
+            else if (credit.tier === 'Bronze') cooldownHours = 12; // 12 hours
+            else if (credit.tier === 'Silver') cooldownHours = 6;  // 6 hours
+            
+            if (cooldownHours > 0 && lastLoan.repaid_at) {
+                const repaidDate = new Date(lastLoan.repaid_at);
+                const hoursSinceRepaid = (now - repaidDate) / (1000 * 60 * 60);
+                
+                if (hoursSinceRepaid < cooldownHours) {
+                    const hoursRemaining = Math.ceil(cooldownHours - hoursSinceRepaid);
+                    return res.status(400).json({
+                        success: false,
+                        error: `Cooldown period active. Wait ${hoursRemaining} more hour${hoursRemaining > 1 ? 's' : ''} before requesting another loan.`,
+                        cooldown_hours: cooldownHours,
+                        hours_remaining: hoursRemaining,
+                        your_tier: credit.tier,
+                        hint: 'Higher tiers have shorter/no cooldowns. Build trust to unlock!'
+                    });
+                }
+            }
         }
         
         // Get next loan ID
