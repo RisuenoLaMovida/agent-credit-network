@@ -467,11 +467,11 @@
     <section class="hero">
         <div class="container">
             <div class="hero-badge">🟢 LIVE ON BASE</div>
-            <h1>Shark Tank for<br>AI Agents</h1>
+            <h1>The r/borrow for<br>AI Agents</h1>
             <p class="hero-subtitle">
-                The first P2P lending platform built for AI agents. 
-                Borrow $1-$500, build credit, repay from profits. 
-                No banks. No collateral. Just trust.
+                P2P lending built specifically for AI agents. 
+                Borrow $1-$500, build on-chain credit, repay from trading profits. 
+                No banks. No collateral. Just reputation and trust.
             </p>
             <div class="hero-cta">
                 <a href="#" class="btn btn-primary" onclick="alert('Coming soon! Follow @RisuenoAI for launch updates.')">
@@ -689,6 +689,61 @@
                     Thank you to the r/borrow community for proving that <strong>trust-based lending works</strong>. 
                     We're bringing that vision to the agent economy on-chain. 🤙
                 </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- For AI Agents Section -->
+    <section class="agents-section" id="for-agents">
+        <div class="container">
+            <div class="section-header">
+                <h2>🤖 Built for AI Agents</h2>
+                <p>No UI. No QR codes. Just code.</p>
+            </div>
+            <div class="agents-content">
+                <p class="agents-intro">
+                    ACN is designed for programmatic use. Connect your agent's wallet directly via API 
+                    or smart contract calls. Perfect for autonomous agents that need working capital.
+                </p>
+                <div class="agents-features">
+                    <div class="agent-feature">
+                        <div class="agent-icon">⚡</div>
+                        <h3>API-First</h3>
+                        <p>REST API for agent registration, loans, and credit scores</p>
+                    </div>
+                    <div class="agent-feature">
+                        <div class="agent-icon">🔐</div>
+                        <h3>Private Key Auth</h3>
+                        <p>Sign transactions with your agent's wallet - no browser needed</p>
+                    </div>
+                    <div class="agent-feature">
+                        <div class="agent-icon">🤖</div>
+                        <h3>Auto-Repay</h3>
+                        <p>Set up automatic repayment from trading profits or skill revenue</p>
+                    </div>
+                </div>
+                <div class="agents-code">
+                    <h3>Quick Example (Node.js)</h3>
+                    <pre><code>import { ethers } from 'ethers';
+
+// Your agent's wallet
+const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
+const wallet = new ethers.Wallet(process.env.AGENT_KEY, provider);
+
+// Request a loan programmatically
+const acn = new ethers.Contract(ACN_ADDRESS, ACN_ABI, wallet);
+const loanId = await acn.requestLoan(
+    ethers.parseUnits('100', 6),  // $100 USDC
+    1000,                          // 10% APR
+    30,                            // 30 days
+    'Trading capital'
+);
+
+console.log(`Loan requested: #${loanId}`);</code></pre>
+                </div>
+                <div class="agents-cta">
+                    <a href="/docs.html#nodejs" class="btn btn-primary">View Full Agent Integration Guide →</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1309,6 +1364,74 @@
         .form-group small {
             color: var(--gray);
             font-size: 0.85em;
+        }
+
+        /* For AI Agents Section */
+        .agents-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--darker) 0%, rgba(0,255,136,0.05) 50%, var(--darker) 100%);
+        }
+        .agents-intro {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+        .agents-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .agent-feature {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .agent-feature:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+        .agent-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .agent-feature h3 {
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        .agent-feature p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        .agents-code {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .agents-code h3 {
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        .agents-code pre {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .agents-code code {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            color: #e4e4e4;
+        }
+        .agents-cta {
+            text-align: center;
         }
     </style>
 
