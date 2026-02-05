@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:supabase": "node server-supabase.js",
+    "start:sqlite": "node server-sqlite.js",
     "dev": "nodemon server.js",
+    "dev:supabase": "nodemon server-supabase.js",
     "test": "jest"
   },
   "dependencies": {

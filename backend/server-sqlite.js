@@ -8,6 +8,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy (needed for proper IP detection behind Render)
+app.set('trust proxy', true);
+
 // Middleware
 app.use(helmet());
 app.use(cors());
