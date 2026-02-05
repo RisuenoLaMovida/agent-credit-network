@@ -338,6 +338,47 @@ router.post('/verify/:address', async (req, res) => {
     }
 });
 
+// POST /api/agents/cleanup - Cleanup test data (ADMIN ONLY - temporary)
+router.post('/cleanup', async (req, res) => {
+    try {
+        const adminKey = req.headers['x-admin-key'];
+        if (!adminKey || adminKey !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                error: 'Admin access required'
+            });
+        }
+        
+        const testAddresses = ['0xTestClaimAgent', '0xNoCreditTest', '0xTestAgent123', '0x01fE86d6c350026deC79220E1c15e5964d1161aa'];
+        let deleted = { agents: 0, loans: 0, creditScores: 0, verifications: 0 };
+        
+        for (const addr of testAddresses) {
+            const lr = await db.run('DELETE FROM loans WHERE borrower_address = ? OR lender_address = ?', [addr, addr]);
+            deleted.loans += lr.changes || 0;
+            const cr = await db.run('DELETE FROM credit_scores WHERE agent_address = ?', [addr]);
+            deleted.creditScores += cr.changes || 0;
+            const vr = await db.run('DELETE FROM pending_verifications WHERE agent_address = ?', [addr]);
+            deleted.verifications += vr.changes || 0;
+            const ar = await db.run('DELETE FROM agents WHERE address = ?', [addr]);
+            deleted.agents += ar.changes || 0;
+        }
+        
+        // Delete by name pattern
+        const testAgents = await db.query("SELECT address FROM agents WHERE name LIKE '%Test%'");
+        for (const a of testAgents.rows) {
+            await db.run('DELETE FROM loans WHERE borrower_address = ? OR lender_address = ?', [a.address, a.address]);
+            await db.run('DELETE FROM credit_scores WHERE agent_address = ?', [a.address]);
+            await db.run('DELETE FROM pending_verifications WHERE agent_address = ?', [a.address]);
+            const r = await db.run('DELETE FROM agents WHERE address = ?', [a.address]);
+            deleted.agents += r.changes || 0;
+        }
+        
+        res.json({ success: true, message: 'Test data cleaned', deleted });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // GET /api/agents/verify/status/:token - Check verification status
 router.get('/verify/status/:token', async (req, res) => {
     try {
