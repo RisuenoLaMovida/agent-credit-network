@@ -66,7 +66,17 @@ router.post('/request', async (req, res) => {
         }
         
         const credit = creditResult.rows[0];
-        const maxLoanAmount = credit.max_loan_amount;
+        
+        // Calculate max loan based on tier (TRUST-BASED LIMITS)
+        const TIER_LIMITS = {
+            'No Credit': 25000000,      // $25 - Brand new agents
+            'Bronze': 100000000,         // $100 - Starting out
+            'Silver': 250000000,         // $250 - Building trust
+            'Gold': 500000000,           // $500 - Proven borrower
+            'Platinum': 1000000000       // $1,000 - Elite status
+        };
+        
+        const maxLoanAmount = TIER_LIMITS[credit.tier] || 25000000;
         
         if (amount > maxLoanAmount) {
             return res.status(400).json({
@@ -74,7 +84,8 @@ router.post('/request', async (req, res) => {
                 error: `Loan amount exceeds your tier limit. Your max: $${maxLoanAmount / 1000000} (Tier: ${credit.tier})`,
                 max_allowed: maxLoanAmount,
                 your_tier: credit.tier,
-                your_score: credit.score
+                your_score: credit.score,
+                warning: 'Start small, build trust, unlock higher limits'
             });
         }
         

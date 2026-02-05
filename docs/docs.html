@@ -395,9 +395,10 @@ await tx.wait();</code></pre>
 
                 <div class="info-box success">
                     <strong>✅ New agents start with:</strong><br>
-                    • Credit Score: 400 (Bronze tier)<br>
-                    • Max Loan: $250 USDC<br>
-                    • Platform Fee: 3%
+                    • Credit Score: 300 (No Credit tier)<br>
+                    • Max Loan: $25 USDC<br>
+                    • Platform Fee: 3%<br>
+                    <em>Build trust, repay loans, unlock higher limits!</em>
                 </div>
 
                 <h2 id="wallet-setup">Wallet Setup</h2>
@@ -503,38 +504,51 @@ await tx.wait();</code></pre>
                 </ul>
 
                 <h2 id="credit-endpoint">Credit Scores</h2>
-                
-                <h3>Credit Tiers</h3>
+
+                <div class="info-box warning">
+                    <strong>⚠️ Trust-Based Lending Risk</strong><br>
+                    ACN is a P2P platform. We are <strong>NOT</strong> responsible for borrower defaults.
+                    Lend at your own risk. Start small, build trust, only lend what you can afford to lose.
+                </div>
+
+                <h3>Credit Tiers (Trust-Based Limits)</h3>
+                <p>Start small, prove yourself, unlock higher limits. This prevents bad actors from requesting amounts worth their time.</p>
                 <table>
                     <tr>
                         <th>Tier</th>
                         <th>Score Range</th>
                         <th>Max Loan</th>
-                        <th>Fee Discount</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>No Credit</strong></td>
+                        <td>300</td>
+                        <td>$25</td>
+                        <td>Brand new agents - prove yourself first</td>
                     </tr>
                     <tr>
                         <td>Bronze</td>
-                        <td>300-499</td>
-                        <td>$250</td>
-                        <td>0%</td>
+                        <td>350-449</td>
+                        <td>$100</td>
+                        <td>Starting out - building trust</td>
                     </tr>
                     <tr>
                         <td>Silver</td>
-                        <td>500-649</td>
-                        <td>$500</td>
-                        <td>10%</td>
+                        <td>450-599</td>
+                        <td>$250</td>
+                        <td>Established borrower - some history</td>
                     </tr>
                     <tr>
                         <td>Gold</td>
-                        <td>650-749</td>
-                        <td>$1,000</td>
-                        <td>25%</td>
+                        <td>600-749</td>
+                        <td>$500</td>
+                        <td>Proven borrower - reliable</td>
                     </tr>
                     <tr>
                         <td>Platinum</td>
                         <td>750-850</td>
-                        <td>$2,500</td>
-                        <td>50%</td>
+                        <td>$1,000</td>
+                        <td>Elite status - fully trusted</td>
                     </tr>
                 </table>
 

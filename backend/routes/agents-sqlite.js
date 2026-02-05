@@ -20,10 +20,10 @@ router.post('/register', async (req, res) => {
             VALUES (?, ?, ?, 0)
         `, [address, name, description]);
         
-        // Initialize credit score
+        // Initialize credit score - NEW AGENTS START AT $25 (No Credit tier)
         await db.run(`
             INSERT OR IGNORE INTO credit_scores (agent_address, score, tier, max_loan_amount)
-            VALUES (?, 400, 'Bronze', 250000000)
+            VALUES (?, 300, 'No Credit', 25000000)
         `, [address]);
         
         // Get agent
