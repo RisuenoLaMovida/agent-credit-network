@@ -68,7 +68,8 @@ router.post('/:token', async (req, res) => {
         console.error('Error verifying agent:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to verify agent'
+            error: 'Failed to verify agent',
+            details: error.message
         });
     }
 });
