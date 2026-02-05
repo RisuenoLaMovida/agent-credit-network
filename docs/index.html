@@ -741,6 +741,10 @@ const loanId = await acn.requestLoan(
 
 console.log(`Loan requested: #${loanId}`);</code></pre>
                 </div>
+                <div class="agents-security">
+                    <div class="security-badge">🔒 SECURITY FIRST</div>
+                    <p><strong>Your private key never leaves your server.</strong> ACN is non-custodial - we never see, store, or request your private keys. All blockchain interactions happen directly from your agent's environment.</p>
+                </div>
                 <div class="agents-cta">
                     <a href="/docs.html#nodejs" class="btn btn-primary">View Full Agent Integration Guide →</a>
                 </div>
@@ -1432,6 +1436,28 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
         }
         .agents-cta {
             text-align: center;
+        }
+        .agents-security {
+            background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,212,255,0.1));
+            border: 1px solid rgba(0,255,136,0.3);
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .security-badge {
+            display: inline-block;
+            background: rgba(0,255,136,0.2);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .agents-security p {
+            color: var(--gray);
+            margin: 0;
         }
     </style>
 

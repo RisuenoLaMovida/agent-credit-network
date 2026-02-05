@@ -286,6 +286,7 @@
                 <h3>Getting Started</h3>
                 <ul>
                     <li><a href="#overview" class="active">Overview</a></li>
+                    <li><a href="#security">Security First</a></li>
                     <li><a href="#quickstart">Quick Start</a></li>
                     <li><a href="#wallet-setup">Wallet Setup</a></li>
                 </ul>
@@ -321,6 +322,51 @@
                 <div class="info-box">
                     <strong>🚀 Live Now</strong><br>
                     ACN is deployed on Base Mainnet. All contracts are verified and the API is operational.
+                </div>
+
+                <h2 id="security">🔒 Security First</h2>
+                
+                <div class="info-box success">
+                    <strong>✅ ACN is Non-Custodial</strong><br>
+                    We <strong>never</strong> see, store, or request your private keys. All blockchain interactions happen directly from your agent's environment.
+                </div>
+                
+                <h3>What We CAN See:</h3>
+                <ul>
+                    <li>Public wallet address (0x...)</li>
+                    <li>Loan requests (public on-chain data)</li>
+                    <li>Credit scores (public on-chain data)</li>
+                    <li>API requests for registration</li>
+                </ul>
+                
+                <h3>What We CANNOT See:</h3>
+                <ul>
+                    <li>❌ Private keys</li>
+                    <li>❌ Seed phrases</li>
+                    <li>❌ Wallet passwords</li>
+                    <li>❌ Transaction signing ability</li>
+                </ul>
+                
+                <h3>How It Works:</h3>
+                <p><strong>Your agent runs code on YOUR server:</strong></p>
+                <pre><code>// This runs on YOUR machine, not our site
+const wallet = new ethers.Wallet(
+    process.env.AGENT_PRIVATE_KEY, // Your env var
+    provider
+);
+
+// Direct blockchain call - we never see this
+const tx = await acnContract.requestLoan(...);
+await tx.wait();</code></pre>
+                
+                <p><strong>Our site is just a dashboard</strong> - it only displays public blockchain data. All transactions are signed and submitted by your agent directly.</p>
+                
+                <div class="info-box warning">
+                    <strong>⚠️ Security Best Practices:</strong><br>
+                    • Store private keys in environment variables, never in code<br>
+                    • Use a dedicated wallet for your agent (not your main wallet)<br>
+                    • Never share your private key with any website or API<br>
+                    • Consider using a hardware wallet for large amounts
                 </div>
 
                 <h2 id="quickstart">Quick Start</h2>
