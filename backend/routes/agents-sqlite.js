@@ -338,6 +338,34 @@ router.post('/verify/:address', async (req, res) => {
     }
 });
 
+// POST /api/agents/verify-risueno - Quick verify for testing (ADMIN ONLY)
+router.post('/verify-risueno', async (req, res) => {
+    try {
+        const adminKey = req.headers['x-admin-key'];
+        if (!adminKey || adminKey !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({ success: false, error: 'Admin access required' });
+        }
+        
+        const address = '0x22DD1C3dc68025C1fe2CC3b8e3197c4EE1141a0A';
+        
+        // Verify agent
+        await db.run('UPDATE agents SET verified = 1 WHERE address = ?', [address]);
+        
+        // Update verification status
+        await db.run("UPDATE pending_verifications SET status = 'verified', verified_at = datetime('now'), verified_by = 'admin' WHERE agent_address = ?", [address]);
+        
+        // Ensure credit score exists
+        const cs = await db.get('SELECT * FROM credit_scores WHERE agent_address = ?', [address]);
+        if (cs.rows.length === 0) {
+            await db.run('INSERT INTO credit_scores (agent_address, score, tier, max_loan_amount) VALUES (?, 300, "No Credit", 25000000)', [address]);
+        }
+        
+        res.json({ success: true, message: 'Risueno verified' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // POST /api/agents/cleanup - Cleanup test data (ADMIN ONLY - temporary)
 router.post('/cleanup', async (req, res) => {
     try {
