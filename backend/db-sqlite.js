@@ -83,13 +83,20 @@ async function initDatabase() {
                 agent_address TEXT UNIQUE NOT NULL,
                 token TEXT NOT NULL,
                 status TEXT DEFAULT 'pending',
-                x_username TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 verified_at DATETIME,
                 verified_by TEXT,
                 FOREIGN KEY (agent_address) REFERENCES agents(address)
             )
         `);
+        
+        // Add x_username column if it doesn't exist (migration)
+        try {
+            await run(`ALTER TABLE pending_verifications ADD COLUMN x_username TEXT`);
+            console.log('✅ Added x_username column');
+        } catch (e) {
+            // Column already exists
+        }
 
         console.log('✅ Database initialized');
     } catch (error) {
