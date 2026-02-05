@@ -94,6 +94,8 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/agents', require('./routes/agents-sqlite'));
 app.use('/api/loans', require('./routes/loans-sqlite'));
+app.use('/api/leaderboard', require('./routes/leaderboard-sqlite'));
+app.use('/api/analytics', require('./routes/analytics-sqlite'));
 
 // Error handling
 app.use((err, req, res, next) => {

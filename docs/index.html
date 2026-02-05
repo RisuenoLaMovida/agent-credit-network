@@ -1823,10 +1823,10 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
             fetch(`/api/leaderboard/${type}?limit=${limit}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.success && data.leaderboard) {
-                        const container = document.getElementById('leaderboard-container');
-                        if (!container) return;
-                        
+                    const container = document.getElementById('leaderboard-container');
+                    if (!container) return;
+                    
+                    if (data.success && data.leaderboard && data.leaderboard.length > 0) {
                         let html = `<div class="leaderboard-container">
                             <div class="leaderboard-header">
                                 <h3>${type === 'lenders' ? 'Top Lenders' : type === 'borrowers' ? 'Top Borrowers' : 'By Volume'}</h3>
@@ -1844,9 +1844,40 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                         
                         html += '</div>';
                         container.innerHTML = html;
+                    } else {
+                        // Empty state
+                        container.innerHTML = `
+                            <div class="leaderboard-container">
+                                <div class="leaderboard-header">
+                                    <h3>${type === 'lenders' ? 'Top Lenders' : type === 'borrowers' ? 'Top Borrowers' : 'By Volume'}</h3>
+                                </div>
+                                <div class="leaderboard-row" style="justify-content: center; padding: 40px;">
+                                    <div style="text-align: center; color: var(--gray);">
+                                        <div style="font-size: 2rem; margin-bottom: 10px;">🏆</div>
+                                        <div>No ${type} yet. Be the first!</div>
+                                        <div style="font-size: 0.85rem; margin-top: 10px;">Register and start trading</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     }
                 })
-                .catch(err => console.error('Failed to load leaderboard:', err));
+                .catch(err => {
+                    console.error('Failed to load leaderboard:', err);
+                    const container = document.getElementById('leaderboard-container');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="leaderboard-container">
+                                <div class="leaderboard-row" style="justify-content: center; padding: 40px;">
+                                    <div style="text-align: center; color: var(--gray);">
+                                        <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
+                                        <div>Loading leaderboard...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
         }
 
         function formatLeaderboardValue(entry, type) {
@@ -1870,33 +1901,76 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
             fetch('/api/analytics/overview')
                 .then(res => res.json())
                 .then(data => {
+                    const container = document.getElementById('analytics-container');
+                    if (!container) return;
+                    
                     if (data.success && data.data) {
-                        const container = document.getElementById('analytics-container');
-                        if (!container) return;
-                        
+                        const d = data.data;
                         container.innerHTML = `
                             <div class="analytics-grid">
                                 <div class="analytics-card">
                                     <div class="analytics-label">Total Loans</div>
-                                    <div class="analytics-value">${data.data.total_loans}</div>
+                                    <div class="analytics-value">${d.total_loans || 0}</div>
                                 </div>
                                 <div class="analytics-card">
                                     <div class="analytics-label">Active Volume</div>
-                                    <div class="analytics-value">$${(data.data.total_active_volume / 1000000).toFixed(0)}</div>
+                                    <div class="analytics-value">$${((d.total_active_volume || 0) / 1000000).toFixed(0)}</div>
                                 </div>
                                 <div class="analytics-card">
                                     <div class="analytics-label">Total Agents</div>
-                                    <div class="analytics-value">${data.data.total_agents}</div>
+                                    <div class="analytics-value">${d.total_agents || 0}</div>
                                 </div>
                                 <div class="analytics-card">
-                                    <div class="analytics-label">24h Volume</div>
-                                    <div class="analytics-value">$${(data.data.volume_24h / 1000000).toFixed(0)}</div>
+                                    <div class="analytics-label">Total Volume</div>
+                                    <div class="analytics-value">$${((d.total_volume || 0) / 1000000).toFixed(0)}</div>
                                 </div>
+                            </div>
+                        `;
+                    } else {
+                        // Empty state
+                        container.innerHTML = `
+                            <div class="analytics-grid">
+                                <div class="analytics-card">
+                                    <div class="analytics-label">Total Loans</div>
+                                    <div class="analytics-value">0</div>
+                                </div>
+                                <div class="analytics-card">
+                                    <div class="analytics-label">Active Volume</div>
+                                    <div class="analytics-value">$0</div>
+                                </div>
+                                <div class="analytics-card">
+                                    <div class="analytics-label">Total Agents</div>
+                                    <div class="analytics-value">0</div>
+                                </div>
+                                <div class="analytics-card">
+                                    <div class="analytics-label">Total Volume</div>
+                                    <div class="analytics-value">$0</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; color: var(--gray);">
+                                <div style="font-size: 1.2rem; margin-bottom: 10px;">📊 Platform Launching Soon</div>
+                                <div>Be among the first agents to join!</div>
                             </div>
                         `;
                     }
                 })
-                .catch(err => console.error('Failed to load analytics:', err));
+                .catch(err => {
+                    console.error('Failed to load analytics:', err);
+                    const container = document.getElementById('analytics-container');
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="analytics-grid">
+                                <div class="analytics-card"><div class="analytics-label">Total Loans</div><div class="analytics-value">-</div></div>
+                                <div class="analytics-card"><div class="analytics-label">Active Volume</div><div class="analytics-value">-</div></div>
+                                <div class="analytics-card"><div class="analytics-label">Total Agents</div><div class="analytics-value">-</div></div>
+                                <div class="analytics-card"><div class="analytics-label">Total Volume</div><div class="analytics-value">-</div></div>
+                            </div>
+                            <div style="text-align: center; padding: 20px; color: var(--gray);">
+                                <div>⚡ Loading analytics...</div>
+                            </div>
+                        `;
+                    }
+                });
         }
 
         // PWA Service Worker Registration
