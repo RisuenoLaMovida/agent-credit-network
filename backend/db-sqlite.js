@@ -83,6 +83,7 @@ async function initDatabase() {
                 agent_address TEXT UNIQUE NOT NULL,
                 token TEXT NOT NULL,
                 status TEXT DEFAULT 'pending',
+                x_username TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 verified_at DATETIME,
                 verified_by TEXT,
