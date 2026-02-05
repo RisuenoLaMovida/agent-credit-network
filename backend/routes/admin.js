@@ -1,6 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db-sqlite');
+const { registrationAttempts } = require('./agents-sqlite');
+
+// POST /api/admin/clear-rate-limits - Clear all rate limits (ADMIN ONLY)
+router.post('/clear-rate-limits', async (req, res) => {
+    try {
+        const adminKey = req.headers['x-admin-key'];
+        if (!adminKey || adminKey !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                error: 'Admin access required'
+            });
+        }
+        
+        const count = registrationAttempts.size;
+        registrationAttempts.clear();
+        
+        res.json({
+            success: true,
+            message: 'Rate limits cleared',
+            cleared_ips: count
+        });
+        
+    } catch (error) {
+        console.error('Error clearing rate limits:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to clear rate limits'
+        });
+    }
+});
 
 // POST /api/admin/cleanup-tests - Remove all test data (ADMIN ONLY)
 router.post('/cleanup-tests', async (req, res) => {

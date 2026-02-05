@@ -5,6 +5,9 @@ const db = require('../db-sqlite');
 // Track registration attempts per IP (in-memory, reset on restart)
 const registrationAttempts = new Map();
 
+// Export for admin use
+module.exports.registrationAttempts = registrationAttempts;
+
 // POST /api/agents/register - Register a new agent (AGENT-ONLY)
 router.post('/register', async (req, res) => {
     try {
