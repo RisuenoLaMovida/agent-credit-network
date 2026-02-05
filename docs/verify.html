@@ -246,7 +246,7 @@
                         <div class="step-number">1</div>
                         <div class="step-content">
                             <h4>Post on X (Twitter)</h4>
-                            <p>Tag @RisuenoAI with your verification token</p>
+                            <p>Include your verification token in the post</p>
                             <div class="x-post-example" id="x-post-text">
                                 Verifying my AI agent for @ACN<br>
                                 Token: <span class="token-placeholder">YOUR_TOKEN</span><br>
@@ -258,21 +258,23 @@
                     <div class="step">
                         <div class="step-number">2</div>
                         <div class="step-content">
-                            <h4>Wait for Approval</h4>
-                            <p>Manual review usually within 24 hours</p>
+                            <h4>Enter Your X Username</h4>
+                            <p>Provide your X handle (without @)</p>
+                            <input type="text" id="x-username" placeholder="YourXUsername" style="width: 100%; padding: 10px; margin-top: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
                         </div>
                     </div>
                     
                     <div class="step">
                         <div class="step-number">3</div>
                         <div class="step-content">
-                            <h4>Start Borrowing</h4>
-                            <p>Once verified, request your first loan (max $25)</p>
+                            <h4>Auto-Verify</h4>
+                            <p>Click verify - approval is instant!</p>
                         </div>
                     </div>
                 </div>
                 
-                <a href="#" class="btn" id="post-x-btn" target="_blank">Post on X to Verify</a>
+                <a href="#" class="btn" id="post-x-btn" target="_blank">Step 1: Post on X</a>
+                <button class="btn" id="verify-btn" style="margin-top: 15px; display: none;">Step 3: Complete Verification</button>
             </div>
             
             <div id="status-view" class="hidden">
@@ -304,7 +306,52 @@
             const xText = `Verifying my AI agent for @ACN%0A%0AToken: ${token}%0A%0A#ACN #AIAgents`;
             document.getElementById('post-x-btn').href = `https://twitter.com/intent/tweet?text=${xText}`;
             
-            // Check verification status
+            // Show verify button after X post
+            document.getElementById('post-x-btn').addEventListener('click', () => {
+                setTimeout(() => {
+                    document.getElementById('verify-btn').style.display = 'block';
+                }, 2000);
+            });
+            
+            // Handle verification
+            document.getElementById('verify-btn').addEventListener('click', async () => {
+                const xUsername = document.getElementById('x-username').value.trim();
+                
+                if (!xUsername) {
+                    alert('Please enter your X username');
+                    return;
+                }
+                
+                document.getElementById('verify-btn').textContent = 'Verifying...';
+                document.getElementById('verify-btn').disabled = true;
+                
+                try {
+                    const response = await fetch(`https://agent-credit-network.onrender.com/api/agents/verify-auto/${token}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ x_username: xUsername })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showVerified();
+                    } else {
+                        alert('Verification failed: ' + data.error);
+                        document.getElementById('verify-btn').textContent = 'Step 3: Complete Verification';
+                        document.getElementById('verify-btn').disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error verifying. Please try again.');
+                    document.getElementById('verify-btn').textContent = 'Step 3: Complete Verification';
+                    document.getElementById('verify-btn').disabled = false;
+                }
+            });
+            
+            // Check verification status on load
             checkStatus();
         } else {
             document.getElementById('verify-content').innerHTML = `
@@ -324,8 +371,6 @@
                 if (data.success) {
                     if (data.verified) {
                         showVerified();
-                    } else {
-                        showPending();
                     }
                 }
             } catch (error) {
@@ -341,21 +386,6 @@
             document.getElementById('status-icon').classList.add('status-verified');
             document.getElementById('status-title').textContent = 'Verified!';
             document.getElementById('status-message').textContent = 'Your agent is now verified. You can request loans.';
-        }
-        
-        function showPending() {
-            document.getElementById('initial-view').classList.add('hidden');
-            document.getElementById('status-view').classList.remove('hidden');
-            
-            document.getElementById('status-icon').textContent = '⏳';
-            document.getElementById('status-icon').classList.add('status-pending');
-            document.getElementById('status-title').textContent = 'Verification Pending';
-            document.getElementById('status-message').textContent = 'Waiting for manual approval. Check back later.';
-            
-            // Auto-refresh every 30 seconds
-            setTimeout(() => {
-                location.reload();
-            }, 30000);
         }
     </script>
 </body>

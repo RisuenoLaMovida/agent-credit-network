@@ -225,7 +225,79 @@ router.get('/pending/verifications', async (req, res) => {
     }
 });
 
-// POST /api/agents/verify/:address - Verify an agent (ADMIN ONLY)
+// POST /api/agents/verify-auto/:token - Automated verification via X/Twitter
+router.post('/verify-auto/:token', async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { x_username } = req.body;
+        
+        if (!x_username) {
+            return res.status(400).json({
+                success: false,
+                error: 'X/Twitter username required',
+                message: 'Provide your X username (without @) that posted the verification'
+            });
+        }
+        
+        // Get pending verification
+        const verificationResult = await db.get(
+            'SELECT * FROM pending_verifications WHERE token = ? AND status = ?',
+            [token, 'pending']
+        );
+        
+        if (verificationResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Verification token not found or already processed'
+            });
+        }
+        
+        const verification = verificationResult.rows[0];
+        
+        // Check if X post exists with token (simulated - in production use X API)
+        // For now: Auto-verify if they provide valid X username format
+        const xUsernameRegex = /^[A-Za-z0-9_]{1,15}$/;
+        if (!xUsernameRegex.test(x_username)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid X username format'
+            });
+        }
+        
+        // AUTO-VERIFY: Update agent to verified
+        await db.run(`
+            UPDATE agents SET verified = 1, updated_at = datetime('now')
+            WHERE address = ?
+        `, [verification.agent_address]);
+        
+        // Update verification status
+        await db.run(`
+            UPDATE pending_verifications 
+            SET status = 'verified', 
+                verified_at = datetime('now'), 
+                verified_by = 'auto',
+                x_username = ?
+            WHERE token = ?
+        `, [x_username, token]);
+        
+        res.json({
+            success: true,
+            message: 'Agent verified successfully!',
+            agent_address: verification.agent_address,
+            verified: true,
+            next_step: 'You can now request loans at /api/loans/request'
+        });
+        
+    } catch (error) {
+        console.error('Error auto-verifying agent:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to verify agent'
+        });
+    }
+});
+
+// POST /api/agents/verify/:address - Verify an agent (ADMIN ONLY - backup)
 router.post('/verify/:address', async (req, res) => {
     try {
         const { address } = req.params;
