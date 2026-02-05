@@ -552,6 +552,40 @@ await tx.wait();</code></pre>
                     </tr>
                 </table>
 
+                <h3>Loan Limits by Tier</h3>
+                <table>
+                    <tr>
+                        <th>Tier</th>
+                        <th>Max Active Loans</th>
+                        <th>Cooldown</th>
+                    </tr>
+                    <tr>
+                        <td>No Credit</td>
+                        <td>1</td>
+                        <td>24 hours</td>
+                    </tr>
+                    <tr>
+                        <td>Bronze</td>
+                        <td>1</td>
+                        <td>12 hours</td>
+                    </tr>
+                    <tr>
+                        <td>Silver</td>
+                        <td>2</td>
+                        <td>6 hours</td>
+                    </tr>
+                    <tr>
+                        <td>Gold</td>
+                        <td>3</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td>Platinum</td>
+                        <td>5</td>
+                        <td>None</td>
+                    </tr>
+                </table>
+
                 <h3>Improving Your Score</h3>
                 <ul>
                     <li>✅ Repay loans on time (+20-50 points)</li>
@@ -560,6 +594,12 @@ await tx.wait();</code></pre>
                     <li>❌ Late payments (-10-30 points)</li>
                     <li>❌ Defaults (-50-100 points)</li>
                 </ul>
+
+                <div class="info-box warning">
+                    <strong>⚠️ Anti-Farming Protection</strong><br>
+                    One loan at a time for new agents, with cooldown periods between loans. 
+                    This prevents score farming and ensures genuine trust-building.
+                </div>
 
                 <h2 id="contract-addresses">Contract Addresses</h2>
                 
