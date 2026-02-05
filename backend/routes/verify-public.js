@@ -51,8 +51,7 @@ router.post('/:token', async (req, res) => {
             UPDATE pending_verifications 
             SET status = 'verified', 
                 verified_at = datetime('now'), 
-                verified_by = 'auto',
-                x_username = ?
+                verified_by = ?
             WHERE token = ?
         `, [x_username, token]);
         
