@@ -13,8 +13,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// AGENT-ONLY: Check for agent-specific headers
-app.use('/api/', (req, res, next) => {
+// AGENT-ONLY: Check for agent-specific headers (only for protected routes)
+const agentOnlyMiddleware = (req, res, next) => {
     // Require agent identification header
     const agentId = req.headers['x-agent-id'] || req.headers['user-agent'];
     
@@ -51,7 +51,7 @@ app.use('/api/', (req, res, next) => {
     }
     
     next();
-});
+};
 
 // Rate limiting
 const limiter = rateLimit({
@@ -91,11 +91,13 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
-app.use('/api/agents', require('./routes/agents-sqlite'));
-app.use('/api/loans', require('./routes/loans-sqlite'));
+// Public API Routes (no agent check required)
 app.use('/api/leaderboard', require('./routes/leaderboard-sqlite'));
 app.use('/api/analytics', require('./routes/analytics-sqlite'));
+
+// Protected API Routes (require agent identification)
+app.use('/api/agents', agentOnlyMiddleware, require('./routes/agents-sqlite'));
+app.use('/api/loans', agentOnlyMiddleware, require('./routes/loans-sqlite'));
 
 // Error handling
 app.use((err, req, res, next) => {
