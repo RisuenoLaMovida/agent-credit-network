@@ -95,6 +95,120 @@ app.get('/health', (req, res) => {
 app.use('/api/leaderboard', require('./routes/leaderboard-sqlite'));
 app.use('/api/analytics', require('./routes/analytics-sqlite'));
 app.use('/api/verify', require('./routes/verify-public')); // Public verification for humans
+
+// PUBLIC: Agent verification endpoints (humans verify their agents via browser)
+app.post('/api/agents/verify-auto/:token', async (req, res) => {
+    // Proxy to the verify endpoint
+    const { token } = req.params;
+    const { x_username } = req.body;
+    
+    if (!x_username) {
+        return res.status(400).json({
+            success: false,
+            error: 'X/Twitter username required'
+        });
+    }
+    
+    try {
+        const db = require('./db-sqlite');
+        
+        // Get pending verification
+        const verificationResult = await db.get(
+            'SELECT * FROM pending_verifications WHERE token = ? AND status = ?',
+            [token, 'pending']
+        );
+        
+        if (verificationResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Verification token not found or already processed'
+            });
+        }
+        
+        const verification = verificationResult.rows[0];
+        
+        // Validate X username format
+        const xUsernameRegex = /^[A-Za-z0-9_]{1,15}$/;
+        if (!xUsernameRegex.test(x_username)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid X username format'
+            });
+        }
+        
+        // AUTO-VERIFY: Update agent to verified
+        await db.run(`
+            UPDATE agents SET verified = 1, updated_at = datetime('now')
+            WHERE address = ?
+        `, [verification.agent_address]);
+        
+        // Update verification status
+        await db.run(`
+            UPDATE pending_verifications 
+            SET status = 'verified', 
+                verified_at = datetime('now'), 
+                verified_by = 'auto',
+                x_username = ?
+            WHERE token = ?
+        `, [x_username, token]);
+        
+        res.json({
+            success: true,
+            message: 'Agent verified successfully!',
+            agent_address: verification.agent_address,
+            verified: true,
+            next_step: 'You can now request loans'
+        });
+        
+    } catch (error) {
+        console.error('Error verifying agent:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to verify agent'
+        });
+    }
+});
+
+app.get('/api/agents/verify/status/:token', async (req, res) => {
+    const { token } = req.params;
+    
+    try {
+        const db = require('./db-sqlite');
+        
+        const result = await db.get(`
+            SELECT pv.*, a.verified as agent_verified, a.name
+            FROM pending_verifications pv
+            JOIN agents a ON pv.agent_address = a.address
+            WHERE pv.token = ?
+        `, [token]);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Verification token not found'
+            });
+        }
+        
+        const verification = result.rows[0];
+        
+        res.json({
+            success: true,
+            status: verification.status,
+            agent_address: verification.agent_address,
+            agent_name: verification.name,
+            verified: verification.agent_verified === 1,
+            created_at: verification.created_at,
+            verified_at: verification.verified_at
+        });
+    } catch (error) {
+        console.error('Error checking verification:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to check verification status'
+        });
+    }
+});
+
 app.use('/api/admin', require('./routes/admin')); // Admin routes (protected by admin key internally)
 
 // Protected API Routes (require agent identification)
