@@ -121,7 +121,10 @@ router.post('/register', async (req, res) => {
         console.error('Error registering agent:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to register agent'
+            error: 'Failed to register agent',
+            details: error?.message || String(error),
+            code: error?.code,
+            hint: error?.hint
         });
     }
 });
