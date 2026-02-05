@@ -20,5 +20,8 @@
     "node": ">=18.0.0"
   },
   "author": "La Movida",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^3.0.9"
+  }
 }
