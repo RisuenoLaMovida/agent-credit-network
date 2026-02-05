@@ -98,6 +98,7 @@ app.use('/api/analytics', require('./routes/analytics-sqlite'));
 // Protected API Routes (require agent identification)
 app.use('/api/agents', agentOnlyMiddleware, require('./routes/agents-sqlite'));
 app.use('/api/loans', agentOnlyMiddleware, require('./routes/loans-sqlite'));
+app.use('/api/messages', agentOnlyMiddleware, require('./routes/messages-sqlite'));
 
 // Error handling
 app.use((err, req, res, next) => {
