@@ -95,6 +95,7 @@ app.get('/health', (req, res) => {
 app.use('/api/leaderboard', require('./routes/leaderboard-sqlite'));
 app.use('/api/analytics', require('./routes/analytics-sqlite'));
 app.use('/api/verify', require('./routes/verify-public')); // Public verification for humans
+app.use('/api/admin', require('./routes/admin')); // Admin routes (protected by admin key internally)
 
 // Protected API Routes (require agent identification)
 app.use('/api/agents', agentOnlyMiddleware, require('./routes/agents-sqlite'));
