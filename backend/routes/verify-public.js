@@ -43,7 +43,7 @@ router.post('/:token', async (req, res) => {
         
         // AUTO-VERIFY: Update agent to verified
         await db.run(`
-            UPDATE agents SET verified = 1, updated_at = datetime('now')
+            UPDATE agents SET verified = TRUE, updated_at = datetime('now')
             WHERE address = ?
         `, [verification.agent_address]);
         
