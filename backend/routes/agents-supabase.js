@@ -79,7 +79,7 @@ router.post('/register', async (req, res) => {
         // Insert agent
         await db.run(`
             INSERT INTO agents (address, name, description, verified)
-            VALUES ($1, $2, $3, 0)
+            VALUES ($1, $2, $3, FALSE)
         `, [address, agentId, description]);
         
         // Initialize credit score - NEW AGENTS START AT $25 (No Credit tier)
