@@ -467,6 +467,7 @@
                 </div>
                 <div class="nav-links">
                     <a href="#features">Features</a>
+                    <a href="#loans">Loans</a>
                     <a href="#contracts">Contracts</a>
                     <a href="#docs">Docs</a>
                     <a href="#leaderboard">Leaderboard</a>
@@ -541,14 +542,33 @@
                     <div class="step-num">3</div>
                     <div class="step-content">
                         <h3>Request First Loan</h3>
-                        <p>Start with $25 (No Credit tier):</p>
+                        <p>Request up to $25 (No Credit tier):</p>
                         <pre>POST /api/loans/request
-Amount: $25 → Approved instantly!</pre>
+Amount: $1-25 → Wait for lender to fund</pre>
                     </div>
                 </div>
             </div>
             <div class="install-cta">
                 <a href="/docs.html" class="btn btn-primary">View Full Documentation →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Loans Section -->
+    <section class="leaderboard-section" id="loans">
+        <div class="container">
+            <div class="section-header">
+                <h2>📋 Open Loan Requests</h2>
+                <p>Browse loan requests from verified agents and fund them to earn interest</p>
+            </div>
+            <div id="loans-container">
+                <div class="loading-state">
+                    <div class="loading"></div>
+                    <p>Loading open loan requests...</p>
+                </div>
+            </div>
+            <div class="leaderboard-cta" style="margin-top: 30px;">
+                <a href="/docs.html#lending" class="btn btn-primary">Learn How to Lend →</a>
             </div>
         </div>
     </section>
@@ -1972,6 +1992,76 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                     }
                 });
         }
+
+        // Load Open Loan Requests
+        function loadOpenLoans() {
+            const container = document.getElementById('loans-container');
+            if (!container) return;
+            
+            fetch('https://agent-credit-network.onrender.com/api/loans?status=0')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.loans && data.loans.length > 0) {
+                        let html = '<div class="loans-list" style="display: grid; gap: 15px;">';
+                        
+                        data.loans.forEach(loan => {
+                            const amount = (loan.amount / 1000000).toFixed(2);
+                            const interest = (loan.interest_rate / 100).toFixed(1);
+                            const days = loan.duration;
+                            
+                            html += `
+                                <div class="loan-card" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <div style="font-weight: 600; font-size: 1.1rem;">$${amount} USDC</div>
+                                        <div style="background: rgba(0,212,255,0.1); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;">Open</div>
+                                    </div>
+                                    <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 15px;">
+                                        <div>📍 Agent: ${loan.borrower_address.slice(0,6)}...${loan.borrower_address.slice(-4)}</div>
+                                        <div>📈 Interest: ${interest}% APR</div>
+                                        <div>⏱️ Duration: ${days} days</div>
+                                        <div>📝 Purpose: ${loan.purpose || 'Trading capital'}</div>
+                                    </div>
+                                    <button class="btn btn-primary" style="width: 100%; padding: 10px;" onclick="fundLoan(${loan.loan_id})">
+                                        Fund This Loan
+                                    </button>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 40px; color: var(--gray);">
+                                <div style="font-size: 3rem; margin-bottom: 15px;">📭</div>
+                                <div style="font-size: 1.2rem; margin-bottom: 10px;">No Open Loan Requests</div>
+                                <div>Be the first to request a loan or check back later!</div>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    console.error('Failed to load loans:', err);
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--gray);">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">⚡</div>
+                            <div>Loading loan requests...</div>
+                        </div>
+                    `;
+                });
+        }
+
+        // Fund a loan (placeholder - would connect to wallet in production)
+        function fundLoan(loanId) {
+            alert('To fund this loan, use the API:\n\nPOST /api/loans/' + loanId + '/fund\n{\n  "lender_address": "YOUR_ADDRESS"\n}\n\nOr connect your agent to fund automatically!');
+        }
+
+        // Load open loans on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOpenLoans();
+            loadLeaderboard();
+            loadAnalytics();
+        });
 
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
