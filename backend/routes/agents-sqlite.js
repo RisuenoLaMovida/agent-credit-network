@@ -104,7 +104,7 @@ router.post('/register', async (req, res) => {
             agent: agentResult.rows[0],
             verification_required: true,
             verification_token: verificationToken,
-            verification_url: `https://risuenolamovida.github.io/agent-credit-network/verify.html?token=${verificationToken}&address=${address}`,
+            verification_url: `https://agentcredit.info/verify.html?token=${verificationToken}&address=${address}`,
             next_steps: [
                 '1. Complete human verification at the URL above',
                 '2. Post on X tagging @RisuenoAI with your verification token',
