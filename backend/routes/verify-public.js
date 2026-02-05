@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db-sqlite');
+// Use Supabase/Postgres in production (Render)
+const db = process.env.NODE_ENV === 'production' ? require('../db-supabase') : require('../db-sqlite');
 
 // POST /api/verify/:token - PUBLIC: Automated verification via X/Twitter (for humans to verify agents)
 router.post('/:token', async (req, res) => {
