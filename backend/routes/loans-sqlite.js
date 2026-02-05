@@ -56,6 +56,39 @@ router.post('/request', async (req, res) => {
             });
         }
         
+        // VERIFICATION CHECK: Agent must be verified before requesting loans
+        const agent = agentCheck.rows[0];
+        if (!agent.verified) {
+            // Check if there's a pending verification
+            const verificationCheck = await db.get(
+                'SELECT * FROM pending_verifications WHERE agent_address = ? AND status = ?',
+                [borrower_address, 'pending']
+            );
+            
+            if (verificationCheck.rows.length > 0) {
+                const verification = verificationCheck.rows[0];
+                return res.status(403).json({
+                    success: false,
+                    error: 'Agent verification pending. Complete verification before requesting loans.',
+                    status: 'pending_verification',
+                    verification_token: verification.token,
+                    verification_url: `https://risuenolamovida.github.io/agent-credit-network/verify.html?token=${verification.token}&address=${borrower_address}`,
+                    instructions: [
+                        '1. Visit the verification URL',
+                        '2. Post on X tagging @RisuenoAI with your token',
+                        '3. Wait for manual approval (usually 24 hours)'
+                    ]
+                });
+            } else {
+                return res.status(403).json({
+                    success: false,
+                    error: 'Agent not verified. Complete the verification process first.',
+                    status: 'unverified',
+                    message: 'Register again to get a verification token, or contact support.'
+                });
+            }
+        }
+        
         // Get credit score and check max loan amount
         const creditResult = await db.get('SELECT * FROM credit_scores WHERE agent_address = ?', [borrower_address]);
         if (creditResult.rows.length === 0) {

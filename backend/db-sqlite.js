@@ -76,6 +76,20 @@ async function initDatabase() {
             )
         `);
 
+        // Create pending_verifications table
+        await run(`
+            CREATE TABLE IF NOT EXISTS pending_verifications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                agent_address TEXT UNIQUE NOT NULL,
+                token TEXT NOT NULL,
+                status TEXT DEFAULT 'pending',
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                verified_at DATETIME,
+                verified_by TEXT,
+                FOREIGN KEY (agent_address) REFERENCES agents(address)
+            )
+        `);
+
         console.log('✅ Database initialized');
     } catch (error) {
         console.error('❌ Database initialization error:', error.message);

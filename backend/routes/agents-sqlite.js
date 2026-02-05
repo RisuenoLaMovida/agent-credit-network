@@ -89,15 +89,29 @@ router.post('/register', async (req, res) => {
             SELECT * FROM agents WHERE address = ?
         `, [address]);
         
+        // Generate verification token
+        const verificationToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        
+        // Store pending verification
+        await db.run(`
+            INSERT INTO pending_verifications (agent_address, token, created_at)
+            VALUES (?, ?, datetime('now'))
+        `, [address, verificationToken]);
+        
         res.json({
             success: true,
-            message: 'Agent registered successfully. Welcome to ACN!',
+            message: 'Agent registered! Verification required before requesting loans.',
             agent: agentResult.rows[0],
+            verification_required: true,
+            verification_token: verificationToken,
+            verification_url: `https://risuenolamovida.github.io/agent-credit-network/verify.html?token=${verificationToken}&address=${address}`,
             next_steps: [
-                'Request your first loan (max $25)',
-                'Repay on time to unlock higher tiers',
-                'Build trust in the agent economy'
-            ]
+                '1. Complete human verification at the URL above',
+                '2. Post on X tagging @RisuenoAI with your verification token',
+                '3. Wait for manual approval (usually within 24 hours)',
+                '4. Once verified, request your first loan (max $25)'
+            ],
+            note: 'This verification prevents bot spam and ensures genuine AI agents. One verification per agent.'
         });
     } catch (error) {
         console.error('Error registering agent:', error);
@@ -173,6 +187,120 @@ router.get('/', async (req, res) => {
         res.status(500).json({
             success: false,
             error: 'Failed to list agents'
+        });
+    }
+});
+
+// GET /api/agents/pending - List pending verifications (ADMIN ONLY)
+router.get('/pending/verifications', async (req, res) => {
+    try {
+        // Simple admin check - in production use proper auth
+        const adminKey = req.headers['x-admin-key'];
+        if (adminKey !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                error: 'Admin access required'
+            });
+        }
+        
+        const result = await db.query(`
+            SELECT pv.*, a.name, a.description, a.created_at as agent_created
+            FROM pending_verifications pv
+            JOIN agents a ON pv.agent_address = a.address
+            WHERE pv.status = 'pending'
+            ORDER BY pv.created_at DESC
+        `);
+        
+        res.json({
+            success: true,
+            pending: result.rows,
+            count: result.rowCount
+        });
+    } catch (error) {
+        console.error('Error listing pending:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to list pending verifications'
+        });
+    }
+});
+
+// POST /api/agents/verify/:address - Verify an agent (ADMIN ONLY)
+router.post('/verify/:address', async (req, res) => {
+    try {
+        const { address } = req.params;
+        const adminKey = req.headers['x-admin-key'];
+        
+        // Admin check
+        if (adminKey !== process.env.ACN_AGENT_SECRET) {
+            return res.status(403).json({
+                success: false,
+                error: 'Admin access required'
+            });
+        }
+        
+        // Update agent to verified
+        await db.run(`
+            UPDATE agents SET verified = 1, updated_at = datetime('now')
+            WHERE address = ?
+        `, [address]);
+        
+        // Update verification status
+        await db.run(`
+            UPDATE pending_verifications 
+            SET status = 'verified', verified_at = datetime('now'), verified_by = 'admin'
+            WHERE agent_address = ?
+        `, [address]);
+        
+        res.json({
+            success: true,
+            message: `Agent ${address} verified successfully`,
+            agent_address: address
+        });
+    } catch (error) {
+        console.error('Error verifying agent:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to verify agent'
+        });
+    }
+});
+
+// GET /api/agents/verify/status/:token - Check verification status
+router.get('/verify/status/:token', async (req, res) => {
+    try {
+        const { token } = req.params;
+        
+        const result = await db.get(`
+            SELECT pv.*, a.verified as agent_verified, a.name
+            FROM pending_verifications pv
+            JOIN agents a ON pv.agent_address = a.address
+            WHERE pv.token = ?
+        `, [token]);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Verification token not found'
+            });
+        }
+        
+        const verification = result.rows[0];
+        
+        res.json({
+            success: true,
+            status: verification.status,
+            agent_address: verification.agent_address,
+            agent_name: verification.name,
+            verified: verification.agent_verified === 1,
+            created_at: verification.created_at,
+            verified_at: verification.verified_at
+        });
+    } catch (error) {
+        console.error('Error checking verification:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to check verification status'
         });
     }
 });
