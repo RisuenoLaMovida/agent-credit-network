@@ -4,49 +4,69 @@ const db = require('../db-sqlite');
 
 // GET /api/analytics/overview - Platform overview stats
 router.get('/overview', async (req, res) => {
+    const safeGet = async (sql, params = [], fallback = {}) => {
+        try {
+            const result = await db.get(sql, params);
+            return result.rows[0] || fallback;
+        } catch (error) {
+            console.error('Analytics query failed:', error.message);
+            return fallback;
+        }
+    };
+
+    const safeQuery = async (sql, params = [], fallback = []) => {
+        try {
+            const result = await db.query(sql, params);
+            return result.rows || fallback;
+        } catch (error) {
+            console.error('Analytics query failed:', error.message);
+            return fallback;
+        }
+    };
+
     try {
         // Total loans
-        const loansResult = await db.get('SELECT COUNT(*) as count FROM loans');
-        const totalLoans = loansResult.rows[0]?.count || 0;
+        const loansRow = await safeGet('SELECT COUNT(*) as count FROM loans', [], { count: 0 });
+        const totalLoans = loansRow.count || 0;
         
         // Total agents
-        const agentsResult = await db.get('SELECT COUNT(*) as count FROM agents WHERE verified = 1');
-        const totalAgents = agentsResult.rows[0]?.count || 0;
+        const agentsRow = await safeGet('SELECT COUNT(*) as count FROM agents WHERE verified = 1', [], { count: 0 });
+        const totalAgents = agentsRow.count || 0;
         
         // Active volume (funded but not repaid)
-        const activeVolumeResult = await db.get(`
-            SELECT SUM(amount) as total FROM loans WHERE status = 1
-        `);
-        const totalActiveVolume = activeVolumeResult.rows[0]?.total || 0;
+        const activeVolumeRow = await safeGet(`
+            SELECT COALESCE(SUM(amount), 0) as total FROM loans WHERE status = 1
+        `, [], { total: 0 });
+        const totalActiveVolume = activeVolumeRow.total || 0;
         
         // Total volume (all funded loans)
-        const totalVolumeResult = await db.get(`
-            SELECT SUM(amount) as total FROM loans WHERE status IN (1, 2)
-        `);
-        const totalVolume = totalVolumeResult.rows[0]?.total || 0;
+        const totalVolumeRow = await safeGet(`
+            SELECT COALESCE(SUM(amount), 0) as total FROM loans WHERE status IN (1, 2)
+        `, [], { total: 0 });
+        const totalVolume = totalVolumeRow.total || 0;
         
         // 24h volume (loans created in last 24 hours)
-        const volume24hResult = await db.get(`
-            SELECT SUM(amount) as total FROM loans 
+        const volume24hRow = await safeGet(`
+            SELECT COALESCE(SUM(amount), 0) as total FROM loans 
             WHERE created_at > datetime('now', '-1 day')
-        `);
-        const volume24h = volume24hResult.rows[0]?.total || 0;
+        `, [], { total: 0 });
+        const volume24h = volume24hRow.total || 0;
         
         // Loans by status
-        const statusResult = await db.query(`
+        const statusRows = await safeQuery(`
             SELECT status, COUNT(*) as count FROM loans GROUP BY status
-        `);
+        `, [], []);
         const loansByStatus = {};
-        statusResult.rows.forEach(row => {
-            const statusNames = ['Requested', 'Funded', 'Repaid', 'Defaulted', 'Cancelled'];
+        const statusNames = ['Requested', 'Funded', 'Repaid', 'Defaulted', 'Cancelled'];
+        statusRows.forEach(row => {
             loansByStatus[statusNames[row.status] || row.status] = row.count;
         });
         
         // Average loan amount
-        const avgResult = await db.get(`
-            SELECT AVG(amount) as avg FROM loans WHERE status IN (1, 2)
-        `);
-        const avgLoanAmount = avgResult.rows[0]?.avg || 0;
+        const avgRow = await safeGet(`
+            SELECT COALESCE(AVG(amount), 0) as avg FROM loans WHERE status IN (1, 2)
+        `, [], { avg: 0 });
+        const avgLoanAmount = avgRow.avg || 0;
         
         res.json({
             success: true,

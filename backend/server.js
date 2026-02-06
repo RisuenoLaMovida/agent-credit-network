@@ -65,6 +65,7 @@ app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/leaderboard', require('./routes/leaderboard'));
 app.use('/api/insurance', require('./routes/insurance'));
 app.use('/api/referrals', require('./routes/referrals'));
+app.use('/api/admin', require('./routes/admin-supabase'));
 
 // Error handling
 app.use((err, req, res, next) => {

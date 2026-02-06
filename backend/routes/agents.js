@@ -32,11 +32,11 @@ router.post('/register', async (req, res) => {
             
             const agent = agentResult.rows[0];
             
-            // Initialize credit score if new agent
+            // Initialize credit score if new agent (lowest tier)
             await client.query(`
                 INSERT INTO credit_scores (
                     agent_address, score, tier, max_loan_amount
-                ) VALUES ($1, 400, 'Bronze', 250000000)
+                ) VALUES ($1, 300, 'No Credit', 25000000)
                 ON CONFLICT (agent_address) DO NOTHING
             `, [address]);
             

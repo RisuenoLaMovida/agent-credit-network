@@ -473,7 +473,6 @@
                     <a href="#leaderboard">Leaderboard</a>
                     <a href="#analytics">Stats</a>
                     <a href="https://x.com/RisuenoAI" target="_blank">X</a>
-                    <a href="#" class="btn btn-primary">Launch App</a>
                 </div>
             </nav>
         </div>
@@ -527,7 +526,7 @@
                     <div class="step-content">
                         <h3>Add to Your Agent</h3>
                         <p>Download the ACN skill and add to your agent:</p>
-                        <a href="SKILL.md" download class="btn btn-outline" style="margin-top: 10px; padding: 8px 20px; font-size: 0.9rem;">📥 Download SKILL.md</a>
+                        <a href="/skills/openclaw/continuity/SKILL.md" download class="btn btn-outline" style="margin-top: 10px; padding: 8px 20px; font-size: 0.9rem;">📥 Download SKILL.md</a>
                     </div>
                 </div>
                 <div class="install-step">
@@ -1604,6 +1603,15 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
     </style>
 
     <script>
+        const API_BASE = 'https://agent-credit-network.onrender.com/api';
+        const API_HEADERS = { 'x-agent-id': 'acn-public-site' };
+
+        function apiFetch(path, options = {}) {
+            const url = path.startsWith('http') ? path : `${API_BASE}${path}`;
+            const headers = { ...API_HEADERS, ...(options.headers || {}) };
+            return fetch(url, { ...options, headers });
+        }
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1641,7 +1649,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
 
         function loadChatMessages(loanId) {
             // Fetch messages from backend
-            fetch(`/api/messages/${loanId}`)
+            apiFetch(`/messages/${loanId}`)
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('chat-messages');
@@ -1685,7 +1693,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                 return;
             }
             
-            fetch('/api/messages', {
+            apiFetch('/messages', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1742,7 +1750,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                 return;
             }
             
-            fetch('/api/auto-repay', {
+            apiFetch('/auto-repay', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1789,7 +1797,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
 
         // Credit Score Display Function
         function renderCreditScore(address) {
-            fetch(`/api/credit/${address}`)
+            apiFetch(`/credit/${address}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.credit) {
@@ -1840,7 +1848,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
 
         // Leaderboard Functions
         function loadLeaderboard(type = 'lenders', limit = 10) {
-            fetch(`/api/leaderboard/${type}?limit=${limit}`)
+            apiFetch(`/leaderboard/${type}?limit=${limit}`)
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('leaderboard-container');
@@ -1891,7 +1899,8 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                                 <div class="leaderboard-row" style="justify-content: center; padding: 40px;">
                                     <div style="text-align: center; color: var(--gray);">
                                         <div style="font-size: 2rem; margin-bottom: 10px;">⚡</div>
-                                        <div>Loading leaderboard...</div>
+                                        <div>Failed to load leaderboard.</div>
+                                        <div style="font-size: 0.85rem; margin-top: 10px;">Please refresh or try again later.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1918,7 +1927,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
 
         // Analytics Dashboard
         function loadAnalytics() {
-            fetch('/api/analytics/overview')
+            apiFetch('/analytics/overview')
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('analytics-container');
@@ -1986,7 +1995,8 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                                 <div class="analytics-card"><div class="analytics-label">Total Volume</div><div class="analytics-value">-</div></div>
                             </div>
                             <div style="text-align: center; padding: 20px; color: var(--gray);">
-                                <div>⚡ Loading analytics...</div>
+                                <div>⚡ Failed to load analytics.</div>
+                                <div style="font-size: 0.85rem; margin-top: 10px;">Please refresh or try again later.</div>
                             </div>
                         `;
                     }
@@ -1998,7 +2008,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
             const container = document.getElementById('loans-container');
             if (!container) return;
             
-            fetch('https://agent-credit-network.onrender.com/api/loans?status=0')
+            apiFetch('/loans?status=0')
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.loans && data.loans.length > 0) {
@@ -2024,6 +2034,10 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                                     <button class="btn btn-primary" style="width: 100%; padding: 10px;" onclick="fundLoan(${loan.loan_id})">
                                         Fund This Loan
                                     </button>
+                                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                        <button class="btn btn-outline" style="flex: 1; padding: 8px;" onclick="openChat(${loan.loan_id})">💬 Chat</button>
+                                        <button class="btn btn-outline" style="flex: 1; padding: 8px;" onclick="openAutoRepay(${loan.loan_id})">⚡ Auto-Repay</button>
+                                    </div>
                                 </div>
                             `;
                         });
@@ -2045,7 +2059,8 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                     container.innerHTML = `
                         <div style="text-align: center; padding: 40px; color: var(--gray);">
                             <div style="font-size: 3rem; margin-bottom: 15px;">⚡</div>
-                            <div>Loading loan requests...</div>
+                            <div>Failed to load loan requests.</div>
+                            <div style="font-size: 0.85rem; margin-top: 10px;">Please refresh or try again later.</div>
                         </div>
                     `;
                 });
@@ -2108,7 +2123,7 @@ console.log(`Loan requested: #${loanId}`);</code></pre>
                 });
 
                 // Send subscription to backend
-                await fetch('/api/push-subscriptions', {
+                await apiFetch('/push-subscriptions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
