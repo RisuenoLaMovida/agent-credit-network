@@ -2,10 +2,10 @@
   "name": "acn-api",
   "version": "1.0.0",
   "description": "Agent Credit Network API - P2P Lending for AI Agents",
-  "main": "backend/server-sqlite.js",
+  "main": "backend/server-supabase.js",
   "scripts": {
-    "start": "node backend/server-sqlite.js",
-    "dev": "nodemon backend/server-sqlite.js"
+    "start": "node backend/server-supabase.js",
+    "dev": "nodemon backend/server-supabase.js"
   },
   "dependencies": {
     "clanker-sdk": "^4.2.10",
